@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <title>IuK-Blockchain: File Comparison</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: #2b2b2b;
+        }
+
+        p, a, li, h1, h2, h3, h4, h5 {
+            font-family: 'Raleway', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        nav {
+            width: 15%;
+            background-color: #2f3439;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul a li {
+            padding: 30px;
+            color: #ffffff;
+            border-bottom: solid #ffffff 1px;
+            font-size: 15px;
+            opacity: 0.8;
+        }
+
+        nav ul a li:hover {
+            background-color: #44494d;
+        }
+
+        #main {
+            width: 85%;
+            height: 100%;
+            box-shadow: inset 5px 6px 5px -6px;
+
+        }
+
+        #main-content {
+            overflow-x: hidden;
+            height: calc(100% - 80px);
+            padding: 40px 15%;
+        }
+
+        #header {
+            height: 50px;
+            width: 100%;
+            background-color: #349B89;
+            padding-top: 20px;
+        }
+
+        #header h1 {
+            margin: 0;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<div id="header">
+    <h1>IuK-Blockchain</h1>
+</div>
+
+<div style="display: flex; height: calc(100vh - 70px);">
+
+    <nav>
+        <ul>
+            <a href="upload.html">
+                <li>File Upload</li>
+            </a>
+            <a href="compare.html">
+                <li>Compare Files</li>
+            </a>
+        </ul>
+    </nav>
+
+    <div id="main">
+        <div id="main-content">
+
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    holder = document.getElementById('dragndrop');
+
+    holder.ondragover = function () {
+        this.className = 'hover';
+        return false;
+    };
+    holder.ondragend = function () {
+        this.className = '';
+        return false;
+    };
+    holder.ondrop = function (e) {
+        this.className = '';
+        e.preventDefault();
+        console.log(e.dataTransfer.files);
+    }
+</script>
+</html>

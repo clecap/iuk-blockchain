@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <title>IuK-Blockchain: File Upload</title>
+    <style>
+        body {
+            margin: 0;
+            height: 100vh;
+            background-color: #2b2b2b;
+        }
+
+        p, a, li, h1, h2, h3, h4, h5 {
+            font-family: 'Raleway', sans-serif;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        nav {
+            width: 15%;
+            background-color: #2f3439;
+        }
+
+        nav ul {
+            list-style: none;
+            margin: 0;
+            padding: 0;
+        }
+
+        nav ul a li {
+            padding: 30px;
+            color: #ffffff;
+            border-bottom: solid #ffffff 1px;
+            font-size: 15px;
+            opacity: 0.8;
+        }
+
+        nav ul a li:hover {
+            background-color: #44494d;
+        }
+
+        #main {
+            width: 85%;
+            height: 100%;
+            box-shadow: inset 5px 6px 5px -6px;
+
+        }
+
+        #main-content {
+            overflow-x: hidden;
+            height: calc(100% - 60px);
+            padding: 40px 15% 20px;
+        }
+
+        #file-upload {
+            background-color: #2f3439;
+            border-radius: 5px;
+            box-shadow: 0 1px 5px -1px;
+            padding: 0 20px 5px;
+        }
+
+        #file-upload .title {
+            color: white;
+            font-size: 20px;
+            padding: 10px 0;
+            margin: 0;
+        }
+
+        #dragndrop {
+            height: 200px;
+            border: dashed white 2px;
+            border-radius: 3px;
+            margin: 5px 0 40px;
+        }
+
+        #dragndrop input {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+        #dragndrop p {
+            text-align: center;
+            height: 200px;
+            line-height: 200px;
+            white-space: nowrap;
+            margin: 0;
+            color: white;
+        }
+
+        #dragndrop label {
+            -webkit-border-radius: 5px;
+            -moz-border-radius: 5px;
+            border-radius: 5px;
+            background-color: #ec7149;
+            padding: 10px;
+            font-family: 'Raleway', sans-serif;
+            margin-left: 5px;
+            box-shadow: 0 1px 5px -1px #000;
+        }
+
+        #dragndrop label svg {
+            margin: 0 5px;
+        }
+
+        #dragndrop label:active {
+            opacity: 0.8;
+        }
+
+        .label {
+            color: white;
+        }
+
+        .content {
+            background-color: white;
+            height: 100px;
+            width: 35%;
+            border-radius: 3px;
+            box-shadow: inset 0 0 5px 0;
+        }
+
+        #upload-button {
+            border-radius: 3px;
+            color: white;
+            background-color: #349B89;
+            padding: 10px 0;
+            width: 150px;
+            margin: 40px 0 20px;
+            font-family: 'Raleway', sans-serif;
+            border: none black;
+            box-shadow: 0 1px 5px -1px #000;
+            font-size: 1em;
+        }
+
+        #upload-button:active {
+            border: none;
+            opacity: 0.8;
+            box-shadow: 0 1px 2px -1px #000;
+        }
+
+        #upload-button:focus {
+            outline: 0;
+        }
+
+        #header {
+            height: 50px;
+            width: 100%;
+            background-color: #349B89;
+            padding-top: 20px;
+        }
+
+        #header h1 {
+            margin: 0;
+            text-align: center;
+        }
+
+    </style>
+</head>
+<body>
+<div id="header">
+    <h1>IuK-Blockchain</h1>
+</div>
+
+<div style="display: flex; height: calc(100vh - 70px);">
+
+    <nav>
+        <ul>
+            <a href="upload.html">
+                <li>File Upload</li>
+            </a>
+            <a href="compare.html">
+                <li>Compare Files</li>
+            </a>
+        </ul>
+    </nav>
+
+    <div id="main">
+        <div id="main-content">
+            <div id="file-upload">
+                <p class="title">File Upload</p>
+                <div id="dragndrop">
+                    <input type="file" id="file" name="file">
+                    <p>
+                        Drop file here or
+                        <label for="file">
+                            <svg width="13" height="13" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                                <line x1="7" x2="7" y1="0" y2="13" stroke="white" stroke-width="1" stroke-linecap="butt"/>
+                                <line x1="0" x2="13" y1="7" y2="7" stroke="white" stroke-width="1" stroke-linecap="butt"/>
+                            </svg>
+                            Add File
+                        </label>
+                    </p>
+                </div>
+                <div>
+                    <p class="label">Hash</p>
+                    <p class="content"></p>
+                </div>
+                <div>
+                    <p class="label">Signature</p>
+                    <p class="content"></p>
+                </div>
+            </div>
+            <button id="upload-button">
+                Upload File
+            </button>
+        </div>
+    </div>
+</div>
+
+</body>
+<script>
+    fileUpload = document.getElementById('file');
+    dragndrop = document.getElementById('dragndrop');
+    uploadButton = document.getElementById('upload-button');
+
+    dragndrop.ondragover = function () {
+        this.className = 'hover';
+        return false;
+    };
+    dragndrop.ondragend = function () {
+        this.className = '';
+        return false;
+    };
+    dragndrop.ondrop = function (e) {
+        this.className = '';
+        e.preventDefault();
+        window.file = e.dataTransfer.files[0];
+    };
+
+    uploadButton.onclick = function (ev) {
+        var fr = new FileReader();
+        fr.readAsArrayBuffer(window.file);
+        fr.onprogress = function (ev2) {
+            if (ev2.loaded === ev2.total) {
+                console.log(fr.result);
+            }
+        }
+    };
+
+    fileUpload.onchange = function (ev) {
+        window.file = ev.target.files[0];
+    }
+
+</script>
+</html>
