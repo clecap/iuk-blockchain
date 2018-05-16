@@ -1,0 +1,224 @@
+body {
+    margin: 0;
+    height: 100vh;
+    background-color: #2b2b2b;
+}
+
+p, a, li, h1, h2, h3, h4, h5 {
+    font-family: 'Raleway', sans-serif;
+}
+
+a {
+    text-decoration: none;
+}
+
+nav {
+    width: 15%;
+    background-color: #2f3439;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+nav ul a li {
+    padding: 30px 20px;
+    color: #ffffff;
+    border-bottom: solid rgba(255,255,255,0.8) 1px;
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+nav ul a li:hover {
+    background-color: #44494d;
+}
+
+#main {
+    width: 85%;
+    height: 100%;
+    box-shadow: inset 5px 6px 5px -6px;
+}
+
+/* width */
+#main-content::-webkit-scrollbar {
+    width: 10px;
+}
+
+/* Track */
+#main-content::-webkit-scrollbar-track {
+    background: #f1f1f1;
+}
+
+/* Handle */
+#main-content::-webkit-scrollbar-thumb {
+    background: #888;
+}
+
+/* Handle on hover */
+#main-content::-webkit-scrollbar-thumb:hover {
+    background: #555;
+}
+
+#main-content {
+    overflow-x: hidden;
+    height: calc(100% - 80px);
+    padding: 40px 15%;
+}
+
+.panel {
+    margin: 15px 0;
+    background-color: #2f3439;
+    border-radius: 5px;
+    box-shadow: 0 1px 5px -1px;
+    padding: 0 20px 20px;
+}
+
+.panel .title {
+    color: white;
+    font-size: 20px;
+    padding: 10px 0;
+    margin: 0;
+}
+
+.dragndrop {
+    height: 200px;
+    border: dashed white 2px;
+    border-radius: 3px;
+}
+
+.dragndrop input {
+    width: 0.1px;
+    height: 0.1px;
+    opacity: 0;
+    overflow: hidden;
+    position: absolute;
+    z-index: -1;
+}
+
+.dragndrop p {
+    text-align: center;
+    height: 200px;
+    line-height: 200px;
+    white-space: nowrap;
+    margin: 0;
+    color: white;
+}
+
+.dragndrop label {
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    background-color: #ec7149;
+    padding: 10px;
+    font-family: 'Raleway', sans-serif;
+    margin-left: 5px;
+    box-shadow: 0 1px 5px -1px #000;
+    display: inline;
+
+}
+
+.dragndrop label svg {
+    margin: 0 5px;
+}
+
+.dragndrop label:active {
+    opacity: 0.8;
+}
+
+.label {
+    color: white;
+}
+
+.content {
+    background-color: white;
+    height: 100px;
+    border-radius: 3px;
+    box-shadow: inset 0 0 5px 0;
+    word-wrap: break-word;
+    padding: 10px;
+    margin: 0;
+}
+
+#header {
+    height: 50px;
+    width: 100%;
+    background-color: #349B89;
+    padding-top: 20px;
+}
+
+#header h1 {
+    margin: 0;
+    text-align: center;
+    font-size: 2em;
+}
+
+.green-button {
+    border-radius: 3px;
+    color: white;
+    background-color: #349B89;
+    padding: 10px 0;
+    width: 150px;
+    font-family: 'Raleway', sans-serif;
+    border: none black;
+    box-shadow: 0 1px 5px -1px #000;
+    font-size: 1em;
+    margin-top: 20px;
+}
+
+.green-button:active {
+    border: none;
+    opacity: 0.8;
+    box-shadow: 0 1px 2px -1px #000;
+    transform: translateY(1px);
+}
+
+.green-button:focus {
+    outline: 0;
+}
+
+.banner-right {
+    border-bottom-left-radius: 5px;
+    border-top-left-radius: 5px;
+    height: 40px;
+    line-height: 40px;
+    padding-left: 20px;
+    background-color: #349B89;
+    color: white;
+}
+
+.progressbar p {
+    margin: 5px 0;
+    color: white;
+    font-size: 13px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.progressbar progress {
+    text-align: center;
+    height: 12px;
+    width: calc(100%);
+
+    -webkit-appearance: none;
+    border: none;
+    border-radius: 3px;
+
+    /* Set the progressbar to relative */
+    position:relative;
+}
+
+.progressbar progress::-webkit-progress-bar {
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 3px;
+}
+.progressbar progress::-webkit-progress-value {
+    background-color: #ec7149;
+    border-radius: 3px;
+}
+.progressbar progress::-moz-progress-bar {
+    background-color: #ec7149;
+    border-radius: 3px;
+}

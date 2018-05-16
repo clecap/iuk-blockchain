@@ -4,70 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <title>IuK-Blockchain: File Comparison</title>
-    <style>
-        body {
-            margin: 0;
-            height: 100vh;
-            background-color: #2b2b2b;
-        }
-
-        p, a, li, h1, h2, h3, h4, h5 {
-            font-family: 'Raleway', sans-serif;
-        }
-
-        a {
-            text-decoration: none;
-        }
-
-        nav {
-            width: 15%;
-            background-color: #2f3439;
-        }
-
-        nav ul {
-            list-style: none;
-            margin: 0;
-            padding: 0;
-        }
-
-        nav ul a li {
-            padding: 30px;
-            color: #ffffff;
-            border-bottom: solid #ffffff 1px;
-            font-size: 15px;
-            opacity: 0.8;
-        }
-
-        nav ul a li:hover {
-            background-color: #44494d;
-        }
-
-        #main {
-            width: 85%;
-            height: 100%;
-            box-shadow: inset 5px 6px 5px -6px;
-
-        }
-
-        #main-content {
-            overflow-x: hidden;
-            height: calc(100% - 80px);
-            padding: 40px 15%;
-        }
-
-        #header {
-            height: 50px;
-            width: 100%;
-            background-color: #349B89;
-            padding-top: 20px;
-        }
-
-        #header h1 {
-            margin: 0;
-            text-align: center;
-        }
-
-    </style>
+    <link href="style.css" rel="stylesheet">
 </head>
 <body>
 <div id="header">
@@ -89,27 +26,131 @@
 
     <div id="main">
         <div id="main-content">
+            <div class="panel">
+                <p class="title">Compare Files</p>
+                <div style="display: flex; margin-right: -20px">
+                    <div class="dragndrop" id="file-drop" style="width: 45%; height: 300px">
+                        <input type="file" id="file" name="file">
+                        <p style="height: 300px; line-height: 300px">
+                            Drop file here or
+                            <label for="file">
+                                <svg width="13" height="13" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                                    <line x1="7" x2="7" y1="0" y2="13" stroke="white" stroke-width="1" stroke-linecap="butt"/>
+                                    <line x1="0" x2="13" y1="7" y2="7" stroke="white" stroke-width="1" stroke-linecap="butt"/>
+                                </svg>
+                                Add File
+                            </label>
+                        </p>
+                    </div>
+                    <div style="width: 45%; margin-left: auto; position: relative">
+                        <div class="banner-right">Searching</div>
+                        <div class="progressbar" style="height: 80px; margin: 20px 20px 0 0">
+                            <div style="display: flex;">
+                                <svg style="margin: auto 10px auto 0" height="35px" version="1.1" viewBox="0 0 32 32" width="35px" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1"><g fill="#929292" id="icon-55-document-text"><path d="M19.5,3 L9.00276013,3 C7.89666625,3 7,3.89833832 7,5.00732994 L7,27.9926701 C7,29.1012878 7.89092539,30 8.99742191,30 L24.0025781,30 C25.1057238,30 26,29.1017876 26,28.0092049 L26,10.5 L26,10 L20,3 L19.5,3 L19.5,3 L19.5,3 Z M19,4 L8.9955775,4 C8.44573523,4 8,4.45526288 8,4.99545703 L8,28.004543 C8,28.5543187 8.45470893,29 8.9999602,29 L24.0000398,29 C24.5523026,29 25,28.5550537 25,28.0066023 L25,11 L20.9979131,11 C19.8944962,11 19,10.1134452 19,8.99408095 L19,4 L19,4 Z M20,4.5 L20,8.99121523 C20,9.54835167 20.4506511,10 20.9967388,10 L24.6999512,10 L20,4.5 L20,4.5 Z M10,10 L10,11 L17,11 L17,10 L10,10 L10,10 Z M10,7 L10,8 L17,8 L17,7 L10,7 L10,7 Z M10,13 L10,14 L23,14 L23,13 L10,13 L10,13 Z M10,16 L10,17 L23,17 L23,16 L10,16 L10,16 Z M10,19 L10,20 L23,20 L23,19 L10,19 L10,19 Z M10,22 L10,23 L23,23 L23,22 L10,22 L10,22 Z M10,25 L10,26 L23,26 L23,25 L10,25 L10,25 Z" id="document-text"/></g></g></svg>
+                                <div style="width: calc(100% - 35px);">
+                                    <p id="filename-label">No file selected</p>
+                                    <progress id="searchprogress" value="0" max="100"></progress>
+                                    <p id="searchprogress-label" style="opacity: 0.6">0% searched</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="position: absolute; bottom: 0; width: calc(100% - 20px)">
+                            <div class="title">Hash</div>
+                            <div class="content" id="file-hash"></div>
+                        </div>
+                    </div>
+                </div>
 
+            </div>
+            <button id="find-button" class="green-button" style="margin-bottom: 20px">
+                Find File
+            </button>
+
+            <div class="panel">
+                <div class="title">History</div>
+                <div class="content"></div>
+            </div>
         </div>
     </div>
 </div>
 
 </body>
+<script src="sjcl.js"></script>
 <script>
-    holder = document.getElementById('dragndrop');
+    var fr = new FileReader();
+    dragndrop = document.getElementById('file-drop');
+    fileUpload = document.getElementById('file');
+    findButton = document.getElementById('find-button');
 
-    holder.ondragover = function () {
-        this.className = 'hover';
+    fileLabel = document.getElementById('filename-label');
+    progressbar = document.getElementById('searchprogress');
+    progressbarLabel = document.getElementById('searchprogress-label');
+    fileHash = document.getElementById('file-hash');
+
+    dragndrop.ondragover = function () {
         return false;
     };
-    holder.ondragend = function () {
-        this.className = '';
+    dragndrop.ondragend = function () {
         return false;
     };
-    holder.ondrop = function (e) {
-        this.className = '';
+    dragndrop.ondrop = function (e) {
         e.preventDefault();
-        console.log(e.dataTransfer.files);
+        window.file = e.dataTransfer.files[0];
+        updateFile();
+    };
+
+    function updateFile() {
+        if (window.file && window.file.name) {
+            console.log("test2");
+            fileLabel.textContent = window.file.name;
+            fr.readAsText(window.file);
+            fr.onload = function (evt) {
+                console.log("test");
+                if(evt.target.readyState != 2) return;
+                if(evt.target.error) {
+                    alert('Error while reading file');
+                    return;
+                }
+                var bitArray = sjcl.hash.sha256.hash(evt.target.result);
+                var hash = sjcl.codec.hex.fromBits(bitArray);
+                fileHash.textContent = hash;
+            }
+        } else {
+            fileLabel.textContent = "No file selected";
+            updateProgressbar(0);
+            window.file = null;
+        }
     }
+
+    fileUpload.onchange = function (ev) {
+        window.file = ev.target.files[0];
+        updateFile();
+    };
+
+    findButton.onclick = function (ev) {
+        findButton.disabled = true;
+        dragndrop.ondragend = null;
+        dragndrop.ondragover = null;
+        dragndrop.ondrop = null;
+        var timer = setInterval(function () {
+            if (i <= 100) {
+                updateProgressbar(i);
+                i++;
+            } else {
+                clearInterval(timer);
+            }
+        }, 1000)
+    };
+
+    function updateProgressbar(value) {
+        if (0 <= value <= 100) {
+            progressbar.value = value;
+            progressbarLabel.textContent = value + "% searched";
+        }
+    }
+
+    var i = 0;
+
+
 </script>
 </html>
