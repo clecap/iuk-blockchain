@@ -6,9 +6,7 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-        .panel + .panel {
-            margin-left: 30px;
-        }
+
     </style>
 </head>
 <body>
@@ -48,11 +46,11 @@
                 </div>
             </div>
             <div style="display: flex">
-                <div class="panel" style="width: 50%;">
+                <div class="panel" style="width: calc(50% - 15px); margin-right: 15px">
                     <p class="label">Hash</p>
-                    <p class="content"></p>
+                    <p class="content" id="file-hash"></p>
                 </div>
-                <div class="panel" style="width: 50%;">
+                <div class="panel" style="width: calc(50% - 15px); margin-left: 15px">
                     <p class="label">Signature</p>
                     <p class="content"></p>
                 </div>
@@ -66,10 +64,16 @@
 </div>
 
 </body>
+<script src="sjcl.js"></script>
 <script>
+    var fr = new FileReader();
+
     fileUpload = document.getElementById('file');
     dragndrop = document.getElementById('file-drop');
     uploadButton = document.getElementById('upload-button');
+
+    fileHash = document.getElementById('file-hash');
+
 
     dragndrop.ondragover = function () {
         return false;
@@ -80,20 +84,32 @@
     dragndrop.ondrop = function (e) {
         e.preventDefault();
         window.file = e.dataTransfer.files[0];
+        updateFile()
     };
 
     uploadButton.onclick = function (ev) {
-        var fr = new FileReader();
-        fr.readAsArrayBuffer(window.file);
-        fr.onprogress = function (ev2) {
-            if (ev2.loaded === ev2.total) {
-                console.log(fr.result);
+
+    };
+
+    function updateFile() {
+        if (window.file && window.file.name) {
+            fr.readAsText(window.file);
+            fr.onload = function (evt) {
+                if(evt.target.readyState != 2) return;
+                if(evt.target.error) {
+                    alert('Error while reading file');
+                    return;
+                }
+                var bitArray = sjcl.hash.sha256.hash(evt.target.result);
+                var hash = sjcl.codec.hex.fromBits(bitArray);
+                fileHash.textContent = hash;
             }
         }
-    };
+    }
 
     fileUpload.onchange = function (ev) {
         window.file = ev.target.files[0];
+        updateFile();
     }
 
 </script>

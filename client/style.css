@@ -48,17 +48,18 @@ nav ul a li:hover {
 
 /* Track */
 #main-content::-webkit-scrollbar-track {
-    background: #f1f1f1;
+    background: #2B2B2B;
 }
 
 /* Handle */
 #main-content::-webkit-scrollbar-thumb {
-    background: #888;
+    background: #222222;
+    border-radius: 3px;
 }
 
 /* Handle on hover */
 #main-content::-webkit-scrollbar-thumb:hover {
-    background: #555;
+    background: #3B3B3B;
 }
 
 #main-content {
@@ -73,6 +74,7 @@ nav ul a li:hover {
     border-radius: 5px;
     box-shadow: 0 1px 5px -1px;
     padding: 0 20px 20px;
+    box-sizing: border-box;
 }
 
 .panel .title {
@@ -86,6 +88,11 @@ nav ul a li:hover {
     height: 200px;
     border: dashed white 2px;
     border-radius: 3px;
+}
+
+.dragndrop[disabled=true] {
+    opacity: 0.2;
+    border: dashed rgba(255,255,255,0.5) 2px;
 }
 
 .dragndrop input {
@@ -123,8 +130,10 @@ nav ul a li:hover {
     margin: 0 5px;
 }
 
-.dragndrop label:active {
+.dragndrop[disabled=false] label:active {
     opacity: 0.8;
+    box-shadow: 0 1px 2px -1px #000;
+    transform: translateY(1px);
 }
 
 .label {
@@ -139,6 +148,8 @@ nav ul a li:hover {
     word-wrap: break-word;
     padding: 10px;
     margin: 0;
+    font-weight: 600;
+    letter-spacing: 1px;
 }
 
 #header {

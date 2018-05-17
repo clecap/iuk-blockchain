@@ -29,9 +29,9 @@
             <div class="panel">
                 <p class="title">Compare Files</p>
                 <div style="display: flex; margin-right: -20px">
-                    <div class="dragndrop" id="file-drop" style="width: 45%; height: 300px">
+                    <div class="dragndrop" id="file-drop" style="width: 45%; height: 400px">
                         <input type="file" id="file" name="file">
-                        <p style="height: 300px; line-height: 300px">
+                        <p style="height: 400px; line-height: 400px">
                             Drop file here or
                             <label for="file">
                                 <svg width="13" height="13" xmlns="http://www.w3.org/2000/svg" version="1.1">
@@ -56,7 +56,9 @@
                         </div>
                         <div style="position: absolute; bottom: 0; width: calc(100% - 20px)">
                             <div class="title">Hash</div>
-                            <div class="content" id="file-hash"></div>
+                            <div class="content" id="file-hash" style="height: 50px;"></div>
+                            <div class="title">Author</div>
+                            <div class="content" id="author" style="height: 50px;"></div>
                         </div>
                     </div>
                 </div>
@@ -68,7 +70,7 @@
 
             <div class="panel">
                 <div class="title">History</div>
-                <div class="content"></div>
+                <div class="content" style="height: auto"></div>
             </div>
         </div>
     </div>
@@ -95,62 +97,80 @@
     };
     dragndrop.ondrop = function (e) {
         e.preventDefault();
-        window.file = e.dataTransfer.files[0];
+        window.selectedFile = e.dataTransfer.files[0];
         updateFile();
     };
 
     function updateFile() {
-        if (window.file && window.file.name) {
-            console.log("test2");
-            fileLabel.textContent = window.file.name;
-            fr.readAsText(window.file);
+        if (window.selectedFile && window.selectedFile.name) {
+            fileLabel.textContent = window.selectedFile.name;
+            fr.readAsText(window.selectedFile);
             fr.onload = function (evt) {
-                console.log("test");
                 if(evt.target.readyState != 2) return;
                 if(evt.target.error) {
                     alert('Error while reading file');
                     return;
                 }
-                var bitArray = sjcl.hash.sha256.hash(evt.target.result);
+                var bitArray = sjcl.hash.sha256.hash(fr.result);
                 var hash = sjcl.codec.hex.fromBits(bitArray);
+                window.selectedFileHash = hash;
                 fileHash.textContent = hash;
             }
         } else {
             fileLabel.textContent = "No file selected";
             updateProgressbar(0);
-            window.file = null;
+            window.selectedFile = null;
         }
     }
 
     fileUpload.onchange = function (ev) {
-        window.file = ev.target.files[0];
+        window.selectedFile = ev.target.files[0];
         updateFile();
     };
 
     findButton.onclick = function (ev) {
-        findButton.disabled = true;
-        dragndrop.ondragend = null;
-        dragndrop.ondragover = null;
-        dragndrop.ondrop = null;
-        var timer = setInterval(function () {
-            if (i <= 100) {
-                updateProgressbar(i);
-                i++;
-            } else {
-                clearInterval(timer);
-            }
-        }, 1000)
+        if (window.selectedFile && window.selectedFileHash) {
+            findButton.disabled = true;
+            dragndrop.ondrop = function (e) {
+                e.preventDefault();
+            };
+            dragndrop.setAttribute("disabled", "true");
+            fileUpload.disabled = true;
+            var timer = setInterval(function () {
+                if (i <= 100) {
+                    updateProgressbar(i);
+                    i++;
+                } else {
+                    clearInterval(timer);
+                    i = 0;
+                }
+            }, 100)
+        } else {
+            alert("Either no file is selected or the file is not hashed yet")
+        }
+
     };
 
     function updateProgressbar(value) {
-        if (0 <= value <= 100) {
+        if (0 <= value < 100) {
             progressbar.value = value;
             progressbarLabel.textContent = value + "% searched";
+        }
+        if (value === 100) {
+            progressbar.value = value;
+            progressbarLabel.textContent = "Search completed";
+            findButton.disabled = false;
+            dragndrop.ondrop = function (e) {
+                e.preventDefault();
+                window.file = e.dataTransfer.files[0];
+                updateFile();
+            };
+            dragndrop.removeAttribute("disabled")
+            fileUpload.disabled = false;
         }
     }
 
     var i = 0;
-
 
 </script>
 </html>
