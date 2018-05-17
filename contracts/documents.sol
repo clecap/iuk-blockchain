@@ -1,16 +1,13 @@
-pragma solidity ^0.4.23;
+pragma solidity ^0.4.24;
 
 contract Documents {
 
-    struct Author {
-        bytes32 pubkey;
-    }
-
+    // https://crypto.stackexchange.com/questions/18105/how-does-recovering-the-public-key-from-an-ecdsa-signature-work
     struct Document {
-        Author author;
+        address author;
         Signature sig;
         bytes32 hash;
-        bool published;
+        bool exists;
     }
 
     struct Signature {
@@ -19,22 +16,23 @@ contract Documents {
         bytes32 s;
     }
 
-    mapping(address => Author) public authors;
     mapping(bytes32 => Document) public documents;
 
-    function addDocument(bytes32 hash, bytes32 pubkey, uint8 v, bytes32 r, bytes32 s) public {
-        require(!documents[hash].published);
-        require(checkPubkey(msg.sender, pubkey));
-        require(verify(msg.sender, hash, v, r, s));
+    function addDocument(bytes32 hash, uint8 v, bytes32 r, bytes32 s) public {
+        require(!documents[hash].exists);
+        require(verifySignature(msg.sender, hash, v, r, s));
 
-        documents[hash] = Document(Author(pubkey), Signature(v, r, s), hash, true);
+        documents[hash] = Document(msg.sender, Signature(v, r, s), hash, true);
     }
 
-    function checkPubkey(address p, bytes32 pubkey) private pure returns (bool){
-        return (uint(keccak256(pubkey)) & 0x00FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF) == uint(p);
+    function removeDocument(bytes32 hash) public {
+        require(documents[hash].exists);
+        require(documents[hash].author == msg.sender);
+
+        delete documents[hash];
     }
 
-    function verify(address p, bytes32 hash, uint8 v, bytes32 r, bytes32 s) private pure returns(bool) {
+    function verifySignature(address p, bytes32 hash, uint8 v, bytes32 r, bytes32 s) private pure returns(bool) {
         return ecrecover(hash, v, r, s) == p;
     }
 }
