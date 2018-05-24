@@ -6,10 +6,10 @@ builddir = build
 all: $(builddir)/$(fbase).abi $(builddir)/$(fbase).bin
 
 $(builddir)/$(fbase).abi: $(fbase).sol
-	./solc.sh --abi --overwrite ChecksumDB.sol -o build	
+	./solc.sh --abi --optimize --overwrite ChecksumDB.sol -o build	
 
 $(builddir)/$(fbase).bin: $(fbase).sol
-	./solc.sh --bin --overwrite ChecksumDB.sol -o build	
+	./solc.sh --bin --optimize --overwrite ChecksumDB.sol -o build	
 
 solc: Dockerfile
 	docker build -t mysolc .	
