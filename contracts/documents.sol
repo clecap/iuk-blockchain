@@ -1,38 +1,50 @@
-pragma solidity ^0.4.24;
+pragma solidity ^0.4.23;
 
 contract Documents {
 
-    // https://crypto.stackexchange.com/questions/18105/how-does-recovering-the-public-key-from-an-ecdsa-signature-work
     struct Document {
         address author;
-        Signature sig;
         bytes32 hash;
+        bytes32 next;
         bool exists;
-    }
-
-    struct Signature {
-        uint8 v;
-        bytes32 r;
-        bytes32 s;
+        bool revoked;
     }
 
     mapping(bytes32 => Document) public documents;
 
-    function addDocument(bytes32 hash, uint8 v, bytes32 r, bytes32 s) public {
-        require(!documents[hash].exists);
-        require(verifySignature(msg.sender, hash, v, r, s));
+    event DocumentAdded(bytes32 hash, address author);
+    event DocumentUpdated(bytes32 oldHash, bytes32 newHash, address author);
+    event DocumentDeleted(bytes32 hash, address author);
 
-        documents[hash] = Document(msg.sender, Signature(v, r, s), hash, true);
+    function addDocument(bytes32 hash) public {
+        require(!documents[hash].exists);
+
+        documents[hash] = Document(msg.sender, hash, 0, true, false);
+        emit DocumentAdded(hash, msg.sender);
     }
 
-    function removeDocument(bytes32 hash) public {
+    function updateDocument(bytes32 oldHash, bytes32 newHash) public {
+        require(documents[oldHash].exists);
+        require(documents[oldHash].author == msg.sender);
+
+        bytes32 c = oldHash;
+        while (documents[c].next != 0) {
+            c = documents[c].next;
+            require(documents[c].exists);
+            require(documents[c].author == msg.sender);
+        }
+
+        documents[c].next = newHash;
+        addDocument(newHash);
+
+        emit DocumentUpdated(oldHash, newHash, msg.sender);
+    }
+
+    function revokeDocument(bytes32 hash) public {
         require(documents[hash].exists);
         require(documents[hash].author == msg.sender);
 
-        delete documents[hash];
-    }
-
-    function verifySignature(address p, bytes32 hash, uint8 v, bytes32 r, bytes32 s) private pure returns(bool) {
-        return ecrecover(hash, v, r, s) == p;
+        documents[hash].revoked = true;
+        emit DocumentDeleted(hash, msg.sender);
     }
 }
