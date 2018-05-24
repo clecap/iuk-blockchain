@@ -14,7 +14,7 @@ contract Documents {
 
     event DocumentAdded(bytes32 hash, address author);
     event DocumentUpdated(bytes32 oldHash, bytes32 newHash, address author);
-    event DocumentDeleted(bytes32 hash, address author);
+    event DocumentRevoked(bytes32 hash, address author);
 
     function addDocument(bytes32 hash) public {
         require(!documents[hash].exists);
@@ -45,6 +45,6 @@ contract Documents {
         require(documents[hash].author == msg.sender);
 
         documents[hash].revoked = true;
-        emit DocumentDeleted(hash, msg.sender);
+        emit DocumentRevoked(hash, msg.sender);
     }
 }
