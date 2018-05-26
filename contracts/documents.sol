@@ -13,8 +13,8 @@ contract Documents {
     mapping(bytes32 => Document) public documents;
 
     event DocumentAdded(bytes32 hash, address author);
-    event DocumentUpdated(bytes32 oldHash, bytes32 newHash, address author);
-    event DocumentRevoked(bytes32 hash, address author);
+    event HashUpdated(bytes32 oldHash, bytes32 newHash, address author);
+    event RevokeUpdated(bytes32 hash, address author, bool newStatus);
 
     function addDocument(bytes32 hash) public {
         require(!documents[hash].exists);
@@ -37,14 +37,18 @@ contract Documents {
         documents[c].next = newHash;
         addDocument(newHash);
 
-        emit DocumentUpdated(oldHash, newHash, msg.sender);
+        emit HashUpdated(oldHash, newHash, msg.sender);
     }
 
-    function revokeDocument(bytes32 hash) public {
+    function setRevoke(bytes32 hash, bool revoke) public {
         require(documents[hash].exists);
         require(documents[hash].author == msg.sender);
 
-        documents[hash].revoked = true;
-        emit DocumentRevoked(hash, msg.sender);
+        bool current = documents[hash].revoked;
+        if (current != revoke) {
+            documents[hash].revoked = revoke;
+        }
+        
+        emit RevokeUpdated(hash, msg.sender, revoke);
     }
 }
