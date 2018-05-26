@@ -15,6 +15,11 @@ contract Documents {
     event DocumentAdded(bytes32 hash, address author);
     event HashUpdated(bytes32 oldHash, bytes32 newHash, address author);
     event RevokeUpdated(bytes32 hash, address author, bool newStatus);
+    
+    modifier onlyAuthor(bytes32 hash) {
+        require(documents[hash].author == msg.sender);
+        _;
+    }
 
     function addDocument(bytes32 hash) public {
         require(!documents[hash].exists);
@@ -23,9 +28,9 @@ contract Documents {
         emit DocumentAdded(hash, msg.sender);
     }
 
-    function updateDocument(bytes32 oldHash, bytes32 newHash) public {
-        require(documents[oldHash].author == msg.sender);
-
+    function updateDocument(bytes32 oldHash, bytes32 newHash) public
+        onlyAuthor(oldHash) {
+        
         bytes32 c = oldHash;
         while (documents[c].next != 0) {
             c = documents[c].next;
@@ -39,9 +44,9 @@ contract Documents {
         emit HashUpdated(oldHash, newHash, msg.sender);
     }
 
-    function setRevoke(bytes32 hash, bool revoke) public {
-        require(documents[hash].author == msg.sender);
-
+    function setRevoke(bytes32 hash, bool revoke) public
+        onlyAuthor(hash) {
+        
         bool current = documents[hash].revoked;
         if (current != revoke) {
             documents[hash].revoked = revoke;
