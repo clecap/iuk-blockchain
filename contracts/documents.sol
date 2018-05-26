@@ -24,7 +24,6 @@ contract Documents {
     }
 
     function updateDocument(bytes32 oldHash, bytes32 newHash) public {
-        require(documents[oldHash].exists);
         require(documents[oldHash].author == msg.sender);
 
         bytes32 c = oldHash;
@@ -41,7 +40,6 @@ contract Documents {
     }
 
     function setRevoke(bytes32 hash, bool revoke) public {
-        require(documents[hash].exists);
         require(documents[hash].author == msg.sender);
 
         bool current = documents[hash].revoked;
