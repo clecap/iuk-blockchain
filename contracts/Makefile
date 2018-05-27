@@ -1,18 +1,18 @@
-fbase = ChecksumDB
+contract = ChecksumDB
 builddir = build
 
 .PHONY: all clean
 
-all: $(builddir)/$(fbase).abi $(builddir)/$(fbase).bin
+all: $(builddir)/$(contract).abi $(builddir)/$(contract).bin
 
-$(builddir)/$(fbase).abi: $(fbase).sol
-	./solc.sh --abi --optimize --overwrite ChecksumDB.sol -o build	
+$(builddir)/$(contract).abi: $(contract).sol
+	./solc.sh --abi --optimize --overwrite $(contract).sol -o build	
 
-$(builddir)/$(fbase).bin: $(fbase).sol
-	./solc.sh --bin --optimize --overwrite ChecksumDB.sol -o build	
+$(builddir)/$(contract).bin: $(contract).sol
+	./solc.sh --bin --optimize --overwrite $(contract).sol -o build	
 
 solc: Dockerfile
 	docker build -t mysolc .	
 
 clean:
-	rm $(builddir)/$(fbase).abi $(builddir)/$(fbase).bin
+	rm $(builddir)/$(contract).abi $(builddir)/$(contract).bin
