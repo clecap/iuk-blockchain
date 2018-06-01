@@ -15,6 +15,7 @@ a {
 nav {
     width: 15%;
     background-color: #2f3439;
+    min-width: 100px;
 }
 
 nav ul {
@@ -38,7 +39,6 @@ nav ul a li:hover {
 #main {
     width: 85%;
     height: 100%;
-    box-shadow: inset 5px 6px 5px -6px;
 }
 
 /* width */
@@ -64,8 +64,8 @@ nav ul a li:hover {
 
 #main-content {
     overflow-x: hidden;
-    height: calc(100% - 80px);
-    padding: 40px 15%;
+    height: calc(100% - 40px);
+    padding: 20px 15%;
 }
 
 .panel {

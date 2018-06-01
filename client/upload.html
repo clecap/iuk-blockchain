@@ -6,7 +6,11 @@
     <link href="https://fonts.googleapis.com/css?family=Raleway" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
     <style>
-
+        #metamask-img {
+            display: block;
+            margin: 20px auto;
+            max-width: 50%;
+        }
     </style>
 </head>
 <body>
@@ -31,85 +35,106 @@
         <div id="main-content">
             <div class="panel">
                 <p class="title">File Upload</p>
-                <div class="dragndrop" id="file-drop">
-                    <input type="file" id="file" name="file">
-                    <p>
-                        Drop file here or
-                        <label for="file">
-                            <svg width="13" height="13" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                                <line x1="7" x2="7" y1="0" y2="13" stroke="white" stroke-width="1" stroke-linecap="butt"/>
-                                <line x1="0" x2="13" y1="7" y2="7" stroke="white" stroke-width="1" stroke-linecap="butt"/>
-                            </svg>
-                            Add File
-                        </label>
-                    </p>
+                <div style="display: flex;">
+                    <div class="dragndrop" id="file-drop" style="width: 55%;">
+                        <input type="file" id="file" name="file">
+                        <p>
+                            Drop file here or
+                            <label for="file">
+                                <svg width="13" height="13" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                                    <line x1="7" x2="7" y1="0" y2="13" stroke="white" stroke-width="1"
+                                          stroke-linecap="butt"/>
+                                    <line x1="0" x2="13" y1="7" y2="7" stroke="white" stroke-width="1"
+                                          stroke-linecap="butt"/>
+                                </svg>
+                                Add File
+                            </label>
+                        </p>
+                    </div>
+                    <div style="width: 45%; padding-left: 30px; -webkit-box-sizing: border-box;-moz-box-sizing: border-box;box-sizing: border-box;">
+                        <p class="label" id="filename" style="font-weight: 600; margin-top: 5px;">File: No file
+                            selected</p>
+                        <p class="label" style="margin: 5px 0">Hash</p>
+                        <p class="content" id="file-hash"></p>
+                    </div>
+
                 </div>
-            </div>
-            <div style="display: flex">
-                <div class="panel" style="width: calc(50% - 15px); margin-right: 15px">
-                    <p class="label">Hash</p>
-                    <p class="content" id="file-hash"></p>
-                </div>
-                <div class="panel" style="width: calc(50% - 15px); margin-left: 15px">
-                    <p class="label">Signature</p>
-                    <p class="content"></p>
-                </div>
+
             </div>
 
             <button id="upload-button" class="green-button">
                 Upload File
             </button>
         </div>
+        <div id="metamask-download" style="display: none; padding: 4%;">
+            <p style="color: white; text-align: center">To upload files to the IuK-Blockchain you'll need the Metamask Addon
+                for Mozilla Firefox or Google Chrome.</p>
+            <a target="_blank" href="https://metamask.io">
+                <img id="metamask-img" src="download-metamask.png">
+            </a>
+            <p style="color: white; text-align: center">If you have Metamask installed, please make sure it's activated
+                too.</p>
+
+        </div>
     </div>
 </div>
 
 </body>
-<script src="sjcl.js"></script>
 <script>
-    var fr = new FileReader();
+    if (window.web3 !== undefined) {
+        web3.setProvider(new web3.providers.HttpProvider('http://127.0.0.1:8545'));
+        var fr = new FileReader();
 
-    fileUpload = document.getElementById('file');
-    dragndrop = document.getElementById('file-drop');
-    uploadButton = document.getElementById('upload-button');
+        fileUpload = document.getElementById('file');
+        dragndrop = document.getElementById('file-drop');
+        uploadButton = document.getElementById('upload-button');
 
-    fileHash = document.getElementById('file-hash');
+        fileName = document.getElementById('filename');
+        fileHash = document.getElementById('file-hash');
 
 
-    dragndrop.ondragover = function () {
-        return false;
-    };
-    dragndrop.ondragend = function () {
-        return false;
-    };
-    dragndrop.ondrop = function (e) {
-        e.preventDefault();
-        window.file = e.dataTransfer.files[0];
-        updateFile()
-    };
+        dragndrop.ondragover = function () {
+            return false;
+        };
+        dragndrop.ondragend = function () {
+            return false;
+        };
+        dragndrop.ondrop = function (e) {
+            e.preventDefault();
+            window.file = e.dataTransfer.files[0];
+            updateFile()
+        };
 
-    uploadButton.onclick = function (ev) {
+        uploadButton.onclick = function (ev) {
 
-    };
+        };
 
-    function updateFile() {
-        if (window.file && window.file.name) {
-            fr.readAsText(window.file);
-            fr.onload = function (evt) {
-                if(evt.target.readyState != 2) return;
-                if(evt.target.error) {
-                    alert('Error while reading file');
-                    return;
+        function updateFile() {
+            if (window.file && window.file.name) {
+                fileName.textContent = "File: " + window.file.name;
+                fr.readAsText(window.file);
+                fr.onload = function (evt) {
+                    if (evt.target.readyState != 2) return;
+                    if (evt.target.error) {
+                        alert('Error while reading file');
+                        return;
+                    }
+                    var hash = web3.sha3(fr.result);
+                    fileHash.textContent = hash;
                 }
-                var bitArray = sjcl.hash.sha256.hash(evt.target.result);
-                var hash = sjcl.codec.hex.fromBits(bitArray);
-                fileHash.textContent = hash;
+            } else {
+                fileName.textContent = "File: No file selected"
             }
         }
-    }
 
-    fileUpload.onchange = function (ev) {
-        window.file = ev.target.files[0];
-        updateFile();
+        fileUpload.onchange = function (ev) {
+            window.file = ev.target.files[0];
+            updateFile();
+        }
+
+    } else {
+        document.getElementById('main-content').style = "display: none;";
+        document.getElementById('metamask-download').style = "display: block";
     }
 
 </script>

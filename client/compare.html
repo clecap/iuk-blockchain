@@ -5,6 +5,70 @@
     <meta charset="UTF-8">
     <title>IuK-Blockchain: File Comparison</title>
     <link href="style.css" rel="stylesheet">
+    <style>
+        #compare-panel {
+            display: flex;
+            margin-right: -20px;
+        }
+
+        #file-drop {
+            width: 45%;
+            height: 400px;
+        }
+
+        #file-drop > p {
+            height: 400px;
+            line-height: 400px;
+        }
+
+        #compare-sidebar {
+            width: 45%;
+            margin-left: auto;
+            position: relative
+        }
+
+        #sidebar-bottom {
+            position: absolute;
+            bottom: 0;
+            width: calc(100% - 20px)
+        }
+
+        @media screen and (max-width: 1000px) {
+            #file-drop {
+                width: unset;
+                height: 200px;
+            }
+
+            #file-drop > p {
+                height: 200px;
+                line-height: 200px;
+            }
+
+            #compare-panel {
+                display: block;
+                width: 100%;
+            }
+
+            #compare-sidebar {
+                width: 100%;
+            }
+
+            #compare-sidebar .banner-right {
+                margin-right: -20px;
+                margin-top: 20px;
+            }
+
+            #sidebar-bottom {
+                position: relative;
+            }
+        }
+
+        @media (max-width: 500px) {
+            #metamask-img {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
 <body>
 <div id="header">
@@ -24,29 +88,43 @@
         </ul>
     </nav>
 
-    <div id="main">
+    <div id="main" style="position:relative;">
         <div id="main-content">
             <div class="panel">
                 <p class="title">Compare Files</p>
-                <div style="display: flex; margin-right: -20px">
-                    <div class="dragndrop" id="file-drop" style="width: 45%; height: 400px">
+                <div id="compare-panel">
+                    <div class="dragndrop" id="file-drop">
                         <input type="file" id="file" name="file">
-                        <p style="height: 400px; line-height: 400px">
+                        <p>
                             Drop file here or
                             <label for="file">
                                 <svg width="13" height="13" xmlns="http://www.w3.org/2000/svg" version="1.1">
-                                    <line x1="7" x2="7" y1="0" y2="13" stroke="white" stroke-width="1" stroke-linecap="butt"/>
-                                    <line x1="0" x2="13" y1="7" y2="7" stroke="white" stroke-width="1" stroke-linecap="butt"/>
+                                    <line x1="7" x2="7" y1="0" y2="13" stroke="white" stroke-width="1"
+                                          stroke-linecap="butt"/>
+                                    <line x1="0" x2="13" y1="7" y2="7" stroke="white" stroke-width="1"
+                                          stroke-linecap="butt"/>
                                 </svg>
                                 Add File
                             </label>
                         </p>
                     </div>
-                    <div style="width: 45%; margin-left: auto; position: relative">
+                    <div id="compare-sidebar" style="">
                         <div class="banner-right">Searching</div>
                         <div class="progressbar" style="height: 80px; margin: 20px 20px 0 0">
                             <div style="display: flex;">
-                                <svg style="margin: auto 10px auto 0" height="35px" version="1.1" viewBox="0 0 32 32" width="35px" xmlns="http://www.w3.org/2000/svg" xmlns:sketch="http://www.bohemiancoding.com/sketch/ns" xmlns:xlink="http://www.w3.org/1999/xlink"><title/><desc/><defs/><g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1"><g fill="#929292" id="icon-55-document-text"><path d="M19.5,3 L9.00276013,3 C7.89666625,3 7,3.89833832 7,5.00732994 L7,27.9926701 C7,29.1012878 7.89092539,30 8.99742191,30 L24.0025781,30 C25.1057238,30 26,29.1017876 26,28.0092049 L26,10.5 L26,10 L20,3 L19.5,3 L19.5,3 L19.5,3 Z M19,4 L8.9955775,4 C8.44573523,4 8,4.45526288 8,4.99545703 L8,28.004543 C8,28.5543187 8.45470893,29 8.9999602,29 L24.0000398,29 C24.5523026,29 25,28.5550537 25,28.0066023 L25,11 L20.9979131,11 C19.8944962,11 19,10.1134452 19,8.99408095 L19,4 L19,4 Z M20,4.5 L20,8.99121523 C20,9.54835167 20.4506511,10 20.9967388,10 L24.6999512,10 L20,4.5 L20,4.5 Z M10,10 L10,11 L17,11 L17,10 L10,10 L10,10 Z M10,7 L10,8 L17,8 L17,7 L10,7 L10,7 Z M10,13 L10,14 L23,14 L23,13 L10,13 L10,13 Z M10,16 L10,17 L23,17 L23,16 L10,16 L10,16 Z M10,19 L10,20 L23,20 L23,19 L10,19 L10,19 Z M10,22 L10,23 L23,23 L23,22 L10,22 L10,22 Z M10,25 L10,26 L23,26 L23,25 L10,25 L10,25 Z" id="document-text"/></g></g></svg>
+                                <svg style="margin: auto 10px auto 0" height="35px" version="1.1" viewBox="0 0 32 32"
+                                     width="35px" xmlns="http://www.w3.org/2000/svg"
+                                     xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
+                                     xmlns:xlink="http://www.w3.org/1999/xlink"><title/>
+                                    <desc/>
+                                    <defs/>
+                                    <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
+                                        <g fill="#929292" id="icon-55-document-text">
+                                            <path d="M19.5,3 L9.00276013,3 C7.89666625,3 7,3.89833832 7,5.00732994 L7,27.9926701 C7,29.1012878 7.89092539,30 8.99742191,30 L24.0025781,30 C25.1057238,30 26,29.1017876 26,28.0092049 L26,10.5 L26,10 L20,3 L19.5,3 L19.5,3 L19.5,3 Z M19,4 L8.9955775,4 C8.44573523,4 8,4.45526288 8,4.99545703 L8,28.004543 C8,28.5543187 8.45470893,29 8.9999602,29 L24.0000398,29 C24.5523026,29 25,28.5550537 25,28.0066023 L25,11 L20.9979131,11 C19.8944962,11 19,10.1134452 19,8.99408095 L19,4 L19,4 Z M20,4.5 L20,8.99121523 C20,9.54835167 20.4506511,10 20.9967388,10 L24.6999512,10 L20,4.5 L20,4.5 Z M10,10 L10,11 L17,11 L17,10 L10,10 L10,10 Z M10,7 L10,8 L17,8 L17,7 L10,7 L10,7 Z M10,13 L10,14 L23,14 L23,13 L10,13 L10,13 Z M10,16 L10,17 L23,17 L23,16 L10,16 L10,16 Z M10,19 L10,20 L23,20 L23,19 L10,19 L10,19 Z M10,22 L10,23 L23,23 L23,22 L10,22 L10,22 Z M10,25 L10,26 L23,26 L23,25 L10,25 L10,25 Z"
+                                                  id="document-text"/>
+                                        </g>
+                                    </g>
+                                </svg>
                                 <div style="width: calc(100% - 35px);">
                                     <p id="filename-label">No file selected</p>
                                     <progress id="searchprogress" value="0" max="100"></progress>
@@ -54,7 +132,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div style="position: absolute; bottom: 0; width: calc(100% - 20px)">
+                        <div id="sidebar-bottom" style="">
                             <div class="title">Hash</div>
                             <div class="content" id="file-hash" style="height: 50px;"></div>
                             <div class="title">Author</div>
@@ -70,14 +148,16 @@
 
             <div class="panel">
                 <div class="title">History</div>
-                <div class="content" style="height: auto"></div>
+                <div class="content" style="height: auto; min-height: 150px;"></div>
             </div>
+        </div>
+        <div style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; box-shadow: inset 5px 6px 5px -6px; pointer-events: none">
+            <!---->
         </div>
     </div>
 </div>
 
 </body>
-<script src="sjcl.js"></script>
 <script>
     var fr = new FileReader();
     dragndrop = document.getElementById('file-drop');
@@ -104,20 +184,22 @@
     function updateFile() {
         if (window.selectedFile && window.selectedFile.name) {
             fileLabel.textContent = window.selectedFile.name;
+            window.selectedFileHash = "";
+            fileHash.textContent = "";
             fr.readAsText(window.selectedFile);
             fr.onload = function (evt) {
-                if(evt.target.readyState != 2) return;
-                if(evt.target.error) {
+                if (evt.target.readyState != 2) return;
+                if (evt.target.error) {
                     alert('Error while reading file');
                     return;
                 }
-                var bitArray = sjcl.hash.sha256.hash(fr.result);
-                var hash = sjcl.codec.hex.fromBits(bitArray);
+                var hash = web3.sha3(fr.result);
                 window.selectedFileHash = hash;
                 fileHash.textContent = hash;
             }
         } else {
             fileLabel.textContent = "No file selected";
+            fileHash.textContent = "";
             updateProgressbar(0);
             window.selectedFile = null;
         }
@@ -165,12 +247,11 @@
                 window.file = e.dataTransfer.files[0];
                 updateFile();
             };
-            dragndrop.removeAttribute("disabled")
+            dragndrop.removeAttribute("disabled");
             fileUpload.disabled = false;
         }
     }
 
     var i = 0;
-
 </script>
 </html>
