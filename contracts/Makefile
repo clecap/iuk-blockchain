@@ -1,4 +1,4 @@
-contract = ChecksumDB
+contract = documents
 builddir = build
 
 .PHONY: all clean
