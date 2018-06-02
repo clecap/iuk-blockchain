@@ -61,7 +61,7 @@ contract Documents {
     function approve(address to, bytes32 hash) public
         onlyAuthor(hash) {
         
-        approvals[hash] = msg.sender;
+        approvals[hash] = to;
         emit Approval(hash, msg.sender, to);
     }
     
