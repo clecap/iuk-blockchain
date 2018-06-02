@@ -19,7 +19,7 @@ contract Documents is Ownable {
     event DocumentAdded(bytes32 hash, address author);
     event HashUpdated(bytes32 oldHash, bytes32 newHash, address author);
     event RevokeUpdated(bytes32 hash, address author, bool newStatus);
-    
+
     modifier onlyAuthor(bytes32 hash) {
         require(documents[hash].author == msg.sender);
         _;
@@ -71,5 +71,9 @@ contract Documents is Ownable {
         }
         
         emit RevokeUpdated(hash, msg.sender, revoke);
+    }
+
+    function getAuthor(bytes32 hash) public constant returns (address) {
+        return documents[hash].author;
     }
 }
