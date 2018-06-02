@@ -1,6 +1,8 @@
 pragma solidity ^0.4.23;
 
-contract Documents {
+import "./Ownable.sol";
+
+contract Documents is Ownable {
 
     struct Document {
         address author;
@@ -9,6 +11,8 @@ contract Documents {
         bool exists;
         bool revoked;
     }
+
+    uint newDocumentFee = 0.001 ether;
 
     mapping(bytes32 => Document) public documents;
 
@@ -21,7 +25,21 @@ contract Documents {
         _;
     }
 
-    function addDocument(bytes32 hash) public {
+    function withdraw() external onlyOwner {
+        owner.transfer(address(this).balance);
+    }
+
+    function setDocumentFee(uint fee) external onlyOwner {
+        newDocumentFee = fee;
+    }
+
+    function addDocument(bytes32 hash) external payable {
+        require(msg.value == newDocumentFee);
+
+        addDocumentForFree(hash);
+    }
+
+    function addDocumentForFree(bytes32 hash) private {
         require(!documents[hash].exists);
 
         documents[hash] = Document(msg.sender, hash, 0, true, false);
@@ -39,7 +57,7 @@ contract Documents {
         }
 
         documents[c].next = newHash;
-        addDocument(newHash);
+        addDocumentForFree(newHash);
 
         emit HashUpdated(oldHash, newHash, msg.sender);
     }
