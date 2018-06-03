@@ -10,7 +10,7 @@
 \title{IuK-Blockchain}
 \subtitle{Progress report}
 \author{\textsc{Robert Kohlen}\newline\textsc{Richard Dabels}\newline\textsc{Maximilian Jung}\newline\textsc{Daniel Decker}\newline\textsc{Nis Meinert}\newline\textsc{Hannes Hagen}}
-\date{11.05.2018}
+\date{03.06.2018}
 \footinstitute{Institut für Informatik}
 
 \addbibresource{./references.bib}
@@ -32,65 +32,60 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Work divided into groups}
+\begin{frame}{Progress}
 	\begin{itemize}
-		\item Blockchain / Ethereum (4 persons)
-		\item Web interface (3 persons)
+		\item Framework: Parity (Etherum)
+		\item Web interface: Mostly implemented
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Blockchain - from scratch}
+\begin{frame}{Parity}
 	\begin{itemize}
-		\item Easy way to get started thanks to lots of web tutorials
-		\item High flexibility
-		\item High learning effect
-		\item Lots of work on the fundamentals
-		\item Distributed systems are hard to debug
+		\item Implementation of the Etherum blockchain
+		\item Supports Proof of Authority (PoA)
+		\begin{itemize}
+			\item Blocks can only be added by approved accounts
+		\end{itemize}
+		\item Developed by 131 contributors on GitHub
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Blockchain - existing framework}
+\begin{frame}{Contract}
 	\begin{itemize}
-		\item Already tested by many people, thus might be less error-prone
-		\item Faster progress on the real task
-		\item i.e. implementation called go-ethereum provides way to setup private blockchains
+		\item Storing documents as hashes
+		\item Setting authors for documents
+		\item Enabling revision of old documents
+		\item Enabling revocation of documents
+		\item Still unsure about some topics ... (later)
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Schedule}
+\begin{frame}{Docker}
 	\begin{itemize}
-		\item 4 weeks: Planning
-			\begin{itemize}
-				\item Use existing framework or implement own blockchain system
-				\item Specification per group
-			\end{itemize}
-		\item 4 weeks: Implementation
-			\begin{itemize}
-				\item Implementation of blockchain and/or smart contracts
-				\item Implementation of web interface
-			\end{itemize}
-		\item 4 weeks: Setup and testing
-			\begin{itemize}
-				\item Setup of servers (AWS?)
-				\item Testing of the system
-			\end{itemize}
+		\item Running nodes in Docker
+		\item Parity deploy script to generate deployment configurations
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Web interface}
 	\begin{itemize}
-		\item User interface to interact with blockchain:
-			\begin{itemize}
-				\item Add documents to blockchain
-				\item Verify documents on blockchain
-			\end{itemize}
+		\item Mostly functional
+		\item Not yet working on our blockchain
+		\item Uses Metamask to interact with the blockchain
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Web interface}
 	\begin{figure}
-		\includegraphics[width=1\textwidth]{images/GUI.jpg}
+		\includegraphics[width=1\textwidth]{images/GUI-180603_1.png}
 	\end{figure}
+\end{frame}
+
+\begin{frame}{Open questions}
+	\begin{itemize}
+		\item Should ownership of an document be changable?
+		\item Are fees/transaction-gas necessary to prevent spam?
+	\end{itemize}
 \end{frame}
 
 %\begin{frame}[allowframebreaks]{References}
