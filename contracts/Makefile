@@ -1,4 +1,4 @@
-contract = documents
+contract = Documents
 builddir = build
 
 .PHONY: all clean solc
@@ -15,4 +15,4 @@ solc: Dockerfile
 	docker build -t mysolc .	
 
 clean:
-	rm $(builddir)/$(contract).abi $(builddir)/$(contract).bin
+	rm -f $(builddir)/$(contract).abi $(builddir)/$(contract).bin
