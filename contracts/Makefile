@@ -1,7 +1,7 @@
 contract = documents
 builddir = build
 
-.PHONY: all clean
+.PHONY: all clean solc
 
 all: $(builddir)/$(contract).abi $(builddir)/$(contract).bin
 
