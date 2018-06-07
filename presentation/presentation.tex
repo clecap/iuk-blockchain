@@ -9,7 +9,7 @@
 
 \title{IuK-Blockchain}
 \subtitle{Progress report}
-\author{\textsc{Robert Kohlen}\newline\textsc{Richard Dabels}\newline\textsc{Maximilian Jung}\newline\textsc{Daniel Decker}\newline\textsc{Nis Meinert}\newline\textsc{Hannes Hagen}}
+\author{\textsc{Robert Kohlen}\newline\textsc{Richard Dabels}\newline\textsc{Maximilian Jung}\newline\textsc{Daniel Decker}\newline\textsc{Nis Meinert}}
 \date{03.06.2018}
 \footinstitute{Institut für Informatik}
 
@@ -24,11 +24,20 @@
 \begin{frame}{Task}
 	\begin{itemize}
 		\item Develop a private blockchain to use at the IuK chair
-		\item Implement an example scenario to:
+		\item Implement an example scenario:
 		\begin{itemize}
-			\item Verify the authenticity of documents with the help of blockchains
-			\item A way to add documents or hashes of documents to the blockchain
+			\item Validation of documents with the help of blockchains
 		\end{itemize}
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Requirements}
+	\begin{itemize}
+		\item Fast \& easy way for the user to validate documents
+		\item Add/update/revoke documents (in form of checksums) on the blockchain
+		\item Address on the blockchain represents the identity of the author
+		\item Author can be validated by signing a message with the private key which belongs to his address
+		\item Authentication of authors is harder and only possible via side-channel
 	\end{itemize}
 \end{frame}
 
@@ -37,54 +46,64 @@
 		\item Node software: Parity (Ethereum)
 		\item Web interface: HTML5 + CSS3 + web3.js (Javascript ethereum interface)
 	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=0.5\textwidth]{images/parity-ethereum-logo.png}
+	\end{figure}
 \end{frame}
 
 \begin{frame}{Parity}
 	\begin{itemize}
-		\item Implementation of the Ethereum blockchain
-		\item Supports Proof of Authority (PoA)
+		\item Implementation of the Ethereum Virtual Machine (EVM)
+		\item Supports multiple consensus algorithms, e.g. Proof of Authority (PoA)
 		\begin{itemize}
 			\item Blocks can only be added by approved accounts (validators, i.e. trusted Universities)
 		\end{itemize}
 		\item Developed by 131 contributors on GitHub
+		\item Testing environment: 3 PoA nodes in docker environment
+		\item \url{https://github.com/paritytech/parity}
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Contract}
+\begin{frame}{Functions of the smart contract}
 	\begin{itemize}
-		\item Storing documents as hashes
-		\item Setting authors for documents
-		\item Enabling revision of old documents
-		\item Enabling revocation of documents
-		\item Still unsure about some topics ... (later)
+		\item Mapping: author  $\rightarrow$ document(s)
+		\item Storing documents as checksum
+		\item Read-only validation function: Input checksum $\rightarrow$ Output author address
+		\item Add/Update/Revoke documents
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Docker}
+\begin{frame}{Interaction with the smart contract - web interface}
 	\begin{itemize}
-		\item Running nodes in Docker
-		\item Parity deploy script to generate docker deployment configurations (PoA, 3 nodes)
+		\item Metamask (browser extension) for interaction with the blockchain
 	\end{itemize}
-\end{frame}
-
-\begin{frame}{Web interface}
-	\begin{itemize}
-		\item Mostly functional
-		\item Not yet working on our blockchain
-		\item Uses Metamask (browser extension) to interact with the blockchain
-	\end{itemize}
-\end{frame}
-
-\begin{frame}{Web interface}
 	\begin{figure}
-		\includegraphics[width=0.8\textwidth]{images/GUI-180603_1.png}
+		\includegraphics[width=0.78\textwidth]{images/GUI-180603_1.png}
 	\end{figure}
+\end{frame}
+
+\begin{frame}{*Some* possible attack scenarios}
+	\begin{itemize}
+		\item Block document checksums by adding a large number of checksums
+		\begin{itemize}
+			\item Prevention: hash function with sufficient length, e.g. SHA256
+			\item Pre-computation of possible checksums not plausible (One-Way-Function)
+		\end{itemize}
+		\item DDoS validator nodes to prevent interaction with the smart contract
+		\begin{itemize}
+			\item Prevention: Good firewall or fallback servers
+		\end{itemize}
+		\item Misbehaving/malicious validator nodes
+		\begin{itemize}
+			\item Countermeasure: Revoke validator rights
+		\end{itemize}
+	\end{itemize}
 \end{frame}
 
 \begin{frame}{Open questions}
 	\begin{itemize}
-		\item Should ownership of an document be changable?
-		\item Are fees/transaction-gas necessary to prevent spam?
+		\item Should author of an document be changeable?
+		\item Would an attacker free the document by himself?
 	\end{itemize}
 \end{frame}
 
