@@ -72,8 +72,4 @@ contract Documents is Ownable {
         
         emit RevokeUpdated(hash, msg.sender, revoke);
     }
-
-    function getAuthor(bytes32 hash) public constant returns (address) {
-        return documents[hash].author;
-    }
 }
