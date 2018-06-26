@@ -25,13 +25,16 @@
                 <li>File Upload</li>
             </a>
             <a href="compare.html">
-                <li>Compare Files</li>
+                <li>Search Files</li>
             </a>
         </ul>
     </nav>
 
     <div id="main">
         <div id="main-content">
+            <div id="addressError" class="panel" style="display: none">
+                <p style="color: white; margin: 0; padding-top: 20px;">Couldn't find your account address, please make sure you're are logged into MetaMask.</p>
+            </div>
             <div class="panel">
                 <p class="title">File Upload</p>
                 <div style="display: flex;">
@@ -71,8 +74,7 @@
             <a target="_blank" href="https://metamask.io">
                 <img id="metamask-img" src="download-metamask.png">
             </a>
-            <p style="color: white; text-align: center">If you have Metamask installed, please make sure it's activated
-                too.</p>
+            <p style="color: white; text-align: center">If you have Metamask installed, please make sure it's activated and you're logged in.</p>
 
         </div>
     </div>
@@ -89,6 +91,8 @@
         if (resolved.length !== 0) {
             console.log(resolved);
             window.accountAdress = resolved[0];
+        } else {
+            addressError = document.getElementById('addressError').style.display = "block";
         }
     }, function (error) {
         console.log(error)
@@ -125,7 +129,7 @@
 
         uploadButton.onclick = function (ev) {
             console.log(accountAdress);
-            documentsContract.methods.addDocument(web3.utils.soliditySha3({ hash })).send({
+            documentsContract.methods.addDocument(window.hash).send({
                 from: accountAdress
             });
         };
@@ -149,7 +153,7 @@
                 var hash = web3.utils.soliditySha3(fr.result);
                 window.hash = hash;
                 fileHash.textContent = hash;
-                if (accountAdress) {
+                if (window.accountAdress) {
                     uploadButton.disabled = false;
                 }
             }
