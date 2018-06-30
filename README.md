@@ -38,7 +38,7 @@ Now, to get a custom contract into the blockchain, we need to have web3 for Pyth
 Then, navigate to the contracts directory and use Make to compile the contract
 
     cd contracts
-    make
+    make solc
 
 Of course the contract still needs to be deployed. The Docker deploy script achieves that with the following command
 
