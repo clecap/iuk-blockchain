@@ -21,7 +21,7 @@ After that is done, you will have to deploy the docker image on your system. For
     ./deploy.sh
     ./run.sh
 
-Now, to test your setup, got to [localhost:3001](https://localhost:3001) for a status monitor and [localhost:3002](https://localhost:3002) for the contract web interface. To stop the all nodes, run
+Now, to test your setup, got to [localhost:3001](localhost:3001) for a status monitor and [localhost:3002](localhost:3002) for the contract web interface. To stop the all nodes, run
 
     docker-compose stop
 
