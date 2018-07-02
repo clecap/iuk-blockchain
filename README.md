@@ -87,5 +87,5 @@ cd contracts
 After successful deployment the Ethereum address of the smart contract is returned. You can get some tokens in your MetaMask wallet by using the send script. It uses one of the validators addresses to send tokens.
 ```sh
 cd contracts
-./send <your-wallet-address> <amount>
+./send.sh <your-wallet-address> <amount>
 ```
