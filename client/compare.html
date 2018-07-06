@@ -63,9 +63,7 @@
         }
 
         @media (max-width: 500px) {
-            #metamask-img {
-                max-width: 100%;
-            }
+
         }
     </style>
 </head>
@@ -154,6 +152,10 @@
                 </div>
 
             </div>
+            <div class="panel" id="own-file-panel" style="display: none">
+                <div class="title">Your File</div>
+                <p style="color: white; margin-bottom: 0;">The file you search for is your file. You can revoke it and add documents as successor.</p>
+            </div>
             <button id="find-button" class="green-button" style="margin-bottom: 20px">
                 Find File
             </button>
@@ -174,7 +176,13 @@
     var contractAddress = '0x3f103d4d78051a993Abd300CA688e9565B9FF5e6';
     var web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
     var documentsContract = new web3.eth.Contract([{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"documents","outputs":[{"name":"author","type":"address"},{"name":"hash","type":"bytes32"},{"name":"next","type":"bytes32"},{"name":"exists","type":"bool"},{"name":"revoked","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"}],"name":"addDocument","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"hash","type":"bytes32"}],"name":"getAuthor","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"fee","type":"uint256"}],"name":"setDocumentFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"oldHash","type":"bytes32"},{"name":"newHash","type":"bytes32"}],"name":"updateDocument","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"},{"name":"revoke","type":"bool"}],"name":"setRevoke","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"DocumentAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldHash","type":"bytes32"},{"indexed":false,"name":"newHash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"HashUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"},{"indexed":false,"name":"newStatus","type":"bool"}],"name":"RevokeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}], contractAddress);
-
+    if (web3.currentProvider.isMetaMask) {
+        web3.eth.getAccounts().then(function (response) {
+            window.accounts = response;
+        }, function (error) {
+            console.log(error);
+        })
+    }
     var fr = new FileReader();
     mainContentElement = document.getElementById('main-content');
 
@@ -192,7 +200,8 @@
     revokedPanel = document.getElementById('revoked-panel');
     nextPane = document.getElementById('next-pane');
     nextFileHash = document.getElementById('nextHash');
-    nextButton = document.getElementById('nextButton');
+    nextButton = document.getElementById('next-button');
+    ownFilePanel = document.getElementById('own-file-panel');
 
     dragndrop.ondragover = function () {
         return false;
@@ -218,63 +227,61 @@
                 e.preventDefault();
             };
             dragndrop.setAttribute("disabled", "true");
-
-            documentsContract.methods.documents(web3.utils.soliditySha3({ type: 'bytes32', value: window.selectedFileHash })).call(function(error, result) {
-                if (error) {
-                    console.log(error);
-                    return;
-                }
-                /*
-                result.exists = true;
-                result.author = "0x217b13f3fd7b06dbbf56dc2d346a0e5482712afc3";
-                result.next = "0x74d879f98e09887987a98fff983240845b234c45454535e090a098f7324543f";*/
-
-                if (result.exists) {
-                    console.log(result['author']);
-                    console.log(result['revoked']);
-                    if (result.author) {
-                        authorAddress.textContent = result.author;
-                        // TODO: if author == metamask address, show you
-                    }
-                    if (result.next !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
-                        window.nextHash = result.next;
-                        nextFileHash.textContent = result.next;
-                        nextPane.style.display = "block"
-                        mainContentElement.scrollTo(0,0);
-                        // TODO: Open message and interaction for next
-                    }
-                    if (result.revoked) {
-                        revokedPanel.style.display = "block";
-                    }
-                } else {
-                    notFoundPanel.style.display = "block";
-                    mainContentElement.scrollTo(0,0);
-                }
-            });
-
+            searchFile()
         } else {
             alert("Either no file is selected or the file is not hashed yet")
         }
-
     };
 
-    function updateProgressbar(value) {
-        if (0 <= value < 100) {
-            progressbar.value = value;
-            progressbarLabel.textContent = value + "% searched";
-        }
-        if (value === 100) {
-            progressbar.value = value;
-            progressbarLabel.textContent = "Search completed";
-            findButton.disabled = false;
-            dragndrop.ondrop = function (e) {
-                e.preventDefault();
-                window.file = e.dataTransfer.files[0];
-                updateFile();
-            };
-            dragndrop.removeAttribute("disabled");
-            fileUpload.disabled = false;
-        }
+    function searchForNext() {
+        fileLabel.textContent = "Successor to " + window.nextHash.slice(0, 5) + "..." + window.nextHash.slice(window.nextHash.length - 4, window.nextHash.length - 1);
+        fileHash.textContent = window.nextHash;
+        window.selectedFileHash = window.nextHash;
+        revokedPanel.style.display = "none";
+        nextPane.style.display = "none";
+        notFoundPanel.style.display = "none";
+        authorAddress.textContent = "";
+        ownFilePanel.style.display = "none";
+        searchFile()
+    }
+
+    function searchFile() {
+        documentsContract.methods.documents(web3.utils.soliditySha3({ type: 'bytes32', value: window.selectedFileHash })).call(function(error, result) {
+            if (error) {
+                console.log(error);
+                return;
+            }
+            
+            if (result.exists) {
+                console.log(result['author']);
+                console.log(result['revoked']);
+                if (result.author) {
+                    authorAddress.textContent = result.author;
+                    if (accounts && accounts.map(element => element.toLowerCase()).includes(result.author.toLowerCase())) {
+                        ownFilePanel.style.display = "block";
+                        authorAddress.textContent = result.author + " (you)"
+                    }
+                }
+                if (result.next !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
+                    window.nextHash = result.next;
+                    nextFileHash.textContent = result.next;
+                    nextPane.style.display = "block";
+                    nextButton.onclick = function (ev) {
+                        if (window.nextFileHash) {
+                            searchForNext()
+                        }
+                    };
+                    mainContentElement.scrollTo(0,0);
+                }
+                if (result.revoked) {
+                    revokedPanel.style.display = "block";
+                    mainContentElement.scrollTo(0,0);
+                }
+            } else {
+                notFoundPanel.style.display = "block";
+                mainContentElement.scrollTo(0,0);
+            }
+        });
     }
 
     function updateFile() {
