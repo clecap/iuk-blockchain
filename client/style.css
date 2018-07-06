@@ -69,6 +69,7 @@ nav ul a li:hover {
 }
 
 .panel {
+    width: 100%;
     margin: 15px 0;
     background-color: #2f3439;
     border-radius: 5px;

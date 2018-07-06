@@ -85,7 +85,7 @@
 <script src="web3.min.js"></script>
 <script>
     //Web3 Stuff
-    var contractAddress = '0xdA3b76ABDdeDaF2590e69DF09797E6d3Aacc19c1';
+    var contractAddress = '0x3f103d4d78051a993Abd300CA688e9565B9FF5e6';
     var web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
     web3.eth.getAccounts().then(function(resolved) {
         if (resolved.length !== 0) {
@@ -131,6 +131,10 @@
             console.log(accountAdress);
             documentsContract.methods.addDocument(window.hash).send({
                 from: accountAdress
+            }, function (result) {
+                if (result instanceof Error){
+                    console.log(result)
+                }
             });
         };
     } else {

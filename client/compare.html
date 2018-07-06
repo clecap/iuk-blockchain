@@ -89,8 +89,21 @@
 
     <div id="main" style="position:relative;">
         <div id="main-content">
+            <div class="panel" id="not-found-panel" style="display: none">
+                <div class="title">Document not found</div>
+                <p style="color: white; margin-bottom: 0">The document you searched for couldn't be found.</p>
+            </div>
+            <div class="panel" id="next-pane" style="display: none">
+                <div class="title">Successor document found</div>
+                <p style="color: white;">A successor document has been found for the document you searched for. It's hash is:<br> <div id="nextHash" style="color: white; word-wrap: break-word"></div></p>
+                <button id="next-button" class="green-button" style="width: 190px">Search for successor document</button>
+            </div>
+            <div class="panel" id="revoked-panel" style="display: none;">
+                <div class="title" style="color: #ff0000cf;">Document revoked</div>
+                <p style="color: #ff0000cf; margin-bottom: 0">This document has been revoked by the author.</p>
+            </div>
             <div class="panel">
-                <p class="title">Compare Files</p>
+                <p class="title">Search for Files</p>
                 <div id="compare-panel">
                     <div class="dragndrop" id="file-drop">
                         <input type="file" id="file" name="file">
@@ -133,9 +146,9 @@
                         </div>
                         <div id="sidebar-bottom" style="">
                             <div class="title">Hash</div>
-                            <div class="content" id="file-hash" style="height: 50px;"></div>
+                            <div class="content" id="file-hash" style="height: 60px;"></div>
                             <div class="title">Author</div>
-                            <div class="content" id="author" style="height: 50px;"></div>
+                            <div class="content" id="author" style="height: 40px;"></div>
                         </div>
                     </div>
                 </div>
@@ -144,14 +157,9 @@
             <button id="find-button" class="green-button" style="margin-bottom: 20px">
                 Find File
             </button>
-
-            <div class="panel">
-                <div class="title">History</div>
-                <div class="content" style="height: auto; min-height: 150px;"></div>
-            </div>
         </div>
         <div style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; box-shadow: inset 5px 6px 5px -6px; pointer-events: none">
-            <!---->
+            <!--Element for inner shadow of main content-->
         </div>
     </div>
 </div>
@@ -160,19 +168,16 @@
 
 <script src="web3.min.js"></script>
 <script>
-    var contractAddress = '0xdA3b76ABDdeDaF2590e69DF09797E6d3Aacc19c1';
-    var web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
-    var documentsContract = new web3.eth.Contract([{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"documents","outputs":[{"name":"author","type":"address"},{"name":"hash","type":"bytes32"},{"name":"next","type":"bytes32"},{"name":"exists","type":"bool"},{"name":"revoked","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"}],"name":"addDocument","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"hash","type":"bytes32"}],"name":"getAuthor","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"fee","type":"uint256"}],"name":"setDocumentFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"oldHash","type":"bytes32"},{"name":"newHash","type":"bytes32"}],"name":"updateDocument","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"},{"name":"revoke","type":"bool"}],"name":"setRevoke","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"DocumentAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldHash","type":"bytes32"},{"indexed":false,"name":"newHash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"HashUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"},{"indexed":false,"name":"newStatus","type":"bool"}],"name":"RevokeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}], contractAddress);
-    documentsContract.methods.documents(web3.utils.soliditySha3({ type: 'bytes32', value: web3.utils.fromAscii('test') })).call(function(error, result) {
-        if (error) console.log(error);
-        console.log(result['exists']); // is false if document not found
-        console.log(result['author']);
-        console.log(result['next']); // is not null if updated document exists
-        console.log(result['revoked']);
-    });
+
 </script>
 <script>
+    var contractAddress = '0x3f103d4d78051a993Abd300CA688e9565B9FF5e6';
+    var web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
+    var documentsContract = new web3.eth.Contract([{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"documents","outputs":[{"name":"author","type":"address"},{"name":"hash","type":"bytes32"},{"name":"next","type":"bytes32"},{"name":"exists","type":"bool"},{"name":"revoked","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"}],"name":"addDocument","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"hash","type":"bytes32"}],"name":"getAuthor","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"fee","type":"uint256"}],"name":"setDocumentFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"oldHash","type":"bytes32"},{"name":"newHash","type":"bytes32"}],"name":"updateDocument","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"},{"name":"revoke","type":"bool"}],"name":"setRevoke","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"DocumentAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldHash","type":"bytes32"},{"indexed":false,"name":"newHash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"HashUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"},{"indexed":false,"name":"newStatus","type":"bool"}],"name":"RevokeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}], contractAddress);
+
     var fr = new FileReader();
+    mainContentElement = document.getElementById('main-content');
+
     dragndrop = document.getElementById('file-drop');
     fileUpload = document.getElementById('file');
     findButton = document.getElementById('find-button');
@@ -181,6 +186,13 @@
     progressbar = document.getElementById('searchprogress');
     progressbarLabel = document.getElementById('searchprogress-label');
     fileHash = document.getElementById('file-hash');
+    authorAddress = document.getElementById('author');
+
+    notFoundPanel= document.getElementById('not-found-panel');
+    revokedPanel = document.getElementById('revoked-panel');
+    nextPane = document.getElementById('next-pane');
+    nextFileHash = document.getElementById('nextHash');
+    nextButton = document.getElementById('nextButton');
 
     dragndrop.ondragover = function () {
         return false;
@@ -194,30 +206,6 @@
         updateFile();
     };
 
-    function updateFile() {
-        if (window.selectedFile && window.selectedFile.name) {
-            fileLabel.textContent = window.selectedFile.name;
-            window.selectedFileHash = "";
-            fileHash.textContent = "";
-            fr.readAsText(window.selectedFile);
-            fr.onload = function (evt) {
-                if (evt.target.readyState != 2) return;
-                if (evt.target.error) {
-                    alert('Error while reading file');
-                    return;
-                }
-                var hash = web3.sha3(fr.result);
-                window.selectedFileHash = hash;
-                fileHash.textContent = hash;
-            }
-        } else {
-            fileLabel.textContent = "No file selected";
-            fileHash.textContent = "";
-            updateProgressbar(0);
-            window.selectedFile = null;
-        }
-    }
-
     fileUpload.onchange = function (ev) {
         window.selectedFile = ev.target.files[0];
         updateFile();
@@ -230,16 +218,40 @@
                 e.preventDefault();
             };
             dragndrop.setAttribute("disabled", "true");
-            fileUpload.disabled = true;
-            var timer = setInterval(function () {
-                if (i <= 100) {
-                    updateProgressbar(i);
-                    i++;
-                } else {
-                    clearInterval(timer);
-                    i = 0;
+
+            documentsContract.methods.documents(web3.utils.soliditySha3({ type: 'bytes32', value: window.selectedFileHash })).call(function(error, result) {
+                if (error) {
+                    console.log(error);
+                    return;
                 }
-            }, 100)
+                /*
+                result.exists = true;
+                result.author = "0x217b13f3fd7b06dbbf56dc2d346a0e5482712afc3";
+                result.next = "0x74d879f98e09887987a98fff983240845b234c45454535e090a098f7324543f";*/
+
+                if (result.exists) {
+                    console.log(result['author']);
+                    console.log(result['revoked']);
+                    if (result.author) {
+                        authorAddress.textContent = result.author;
+                        // TODO: if author == metamask address, show you
+                    }
+                    if (result.next !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
+                        window.nextHash = result.next;
+                        nextFileHash.textContent = result.next;
+                        nextPane.style.display = "block"
+                        mainContentElement.scrollTo(0,0);
+                        // TODO: Open message and interaction for next
+                    }
+                    if (result.revoked) {
+                        revokedPanel.style.display = "block";
+                    }
+                } else {
+                    notFoundPanel.style.display = "block";
+                    mainContentElement.scrollTo(0,0);
+                }
+            });
+
         } else {
             alert("Either no file is selected or the file is not hashed yet")
         }
@@ -262,6 +274,30 @@
             };
             dragndrop.removeAttribute("disabled");
             fileUpload.disabled = false;
+        }
+    }
+
+    function updateFile() {
+        if (window.selectedFile && window.selectedFile.name) {
+            fileLabel.textContent = window.selectedFile.name;
+            window.selectedFileHash = "";
+            fileHash.textContent = "";
+            fr.readAsText(window.selectedFile);
+            fr.onload = function (evt) {
+                if (evt.target.readyState != 2) return;
+                if (evt.target.error) {
+                    alert('Error while reading file');
+                    return;
+                }
+                var hash = web3.utils.soliditySha3(fr.result);
+                window.selectedFileHash = hash;
+                fileHash.textContent = hash;
+            }
+        } else {
+            fileLabel.textContent = "No file selected";
+            fileHash.textContent = "";
+            updateProgressbar(0);
+            window.selectedFile = null;
         }
     }
 
