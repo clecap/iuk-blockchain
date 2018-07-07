@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 
-import getopt, sys, os
+import getopt, sys, os, subprocess
 from web3.auto import w3
 import json
 
@@ -13,22 +13,20 @@ def usage(failure = False):
 
     print('\nAvailable options are:')
     print('  -h, --help: print help dialog')
-    print('  -v, --verbose: verbose output')
-    print('  -s, --save: store address in file <CONTRACT_NAME>.address')
+    print('  -s, --write: write new address to web interface files')
     print('  -d, --docker: use local docker parity  network')
     print('  -c<CONTRACT_NAME.sol> --contract=<CONTRACT_NAME.sol>: name of the contract [REQUIRED]')
     print('  -p<BUILD DIRECTORY>, --path=<BUILD DIRECTORY>: where to find .abi and .bin files [REQUIRED]')
 
 try:
-    opts = getopt.getopt(sys.argv[1:], 'hvsdc:p:', ['help', 'verbose', 'save', 'docker', 'contract=', 'path='])
+    opts = getopt.getopt(sys.argv[1:], 'hwdc:p:', ['help', 'write', 'docker', 'contract=', 'path='])
 except getopt.GetoptError as e:
     print(str(e))
     usage(True)
     sys.exit(1)
 
 default_account = 0
-verbose = False
-dump_addr = False
+write = False
 docker = False
 contract_name = None
 build_dir = None
@@ -36,10 +34,8 @@ for opt, arg in opts[0]:
     if opt in ('-h', '--help'):
         usage()
         sys.exit()
-    elif opt in ('-v', '--verbose'):
-        verbose = True
-    elif opt in ('-s', '--save'):
-        dump_addr = True
+    elif opt in ('-w', '--write'):
+        write = True
     elif opt in ('-d', '--docker'):
         docker = True
     elif opt in ('-c', '--contract'):
@@ -86,15 +82,12 @@ else:
     tx_receipt = w3.eth.waitForTransactionReceipt(tx_hash)
 
 address = tx_receipt.contractAddress
+print("Contract address: %s" % address)
 
-if verbose or not dump_addr:
-    temp = 'Contract address: {}' if verbose else '{}'
-    print(temp.format(address))
-
-if dump_addr:
-    address_file_name = contract_name + '.address'
-    temp = 'Stored address in file: {}' if verbose else '{}'
-    print(temp.format(address_file_name))
-
-    with open(address_file_name, 'w') as f:
-        f.write(address)
+if write:
+    replace_command = "find ../client/ -type f -exec sed -i.bak -E \"s/contractAddress = '(.+)'/contractAddress = '%s'/g\" {} \;" % (address)
+    ret = subprocess.call([replace_command], shell=True)
+    if ret == 0:
+        print("Successfully changed contract address in web interface files")
+    else:
+        print("Failed to change contract address in web interface files")

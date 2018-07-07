@@ -67,7 +67,6 @@ pip3 install web3
 Next, navigate to the `contracts` directory and create a small helper Docker container which is used to compile the contract. This has to be done only once and can be created with the following command:
 
 ```sh
-cd contracts
 make solc
 ```
 
@@ -81,11 +80,10 @@ Of course the contract still needs to be deployed. The deploy script achieves th
 
 ```sh
 cd contracts
- ./deploy.py --docker --contract=Documents.sol --path=build
+ ./deploy.py --docker --write --contract=Documents.sol --path=build
 ```
 
 After successful deployment the Ethereum address of the smart contract is returned. You can get some tokens in your MetaMask wallet by using the send script. It uses one of the validators addresses to send tokens.
 ```sh
-cd contracts
 ./send.sh <your-wallet-address> <amount>
 ```
