@@ -179,6 +179,19 @@ nav ul a li:hover {
     margin-top: 20px;
 }
 
+.edit-button {
+    border-radius: 3px;
+    color: white;
+    background-color: rgb(51, 109, 185);
+    padding: 10px 0;
+    width: 120px;
+    font-family: 'Raleway', sans-serif;
+    border: none black;
+    box-shadow: 0 1px 5px -1px #000;
+    font-size: 1em;
+    margin-top: 10px;
+}
+
 .green-button:active {
     border: none;
     opacity: 0.8;

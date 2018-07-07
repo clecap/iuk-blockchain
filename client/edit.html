@@ -5,7 +5,7 @@
     <title>IuK-Blockchain: File Comparison</title>
     <link href="style.css" rel="stylesheet">
     <style>
-        #compare-panel {
+        #edit-panel {
             display: flex;
             margin-right: -20px;
         }
@@ -20,7 +20,7 @@
             line-height: 400px;
         }
 
-        #compare-sidebar {
+        #edit-sidebar {
             width: 45%;
             margin-left: auto;
             position: relative
@@ -43,16 +43,16 @@
                 line-height: 200px;
             }
 
-            #compare-panel {
+            #edit-panel {
                 display: block;
                 width: 100%;
             }
 
-            #compare-sidebar {
+            #edit-sidebar {
                 width: 100%;
             }
 
-            #compare-sidebar .banner-right {
+            #edit-sidebar .banner-right {
                 margin-right: -20px;
                 margin-top: 20px;
             }
@@ -99,13 +99,13 @@
                 <p style="color: white;">A successor document has been found for the document you searched for. It's hash is:<br> <div id="nextHash" style="color: white; word-wrap: break-word"></div></p>
                 <button id="next-button" class="green-button" style="width: 190px">Search for successor document</button>
             </div>
-            <div class="panel" id="revoked-panel" style="display: none;">
+            <!--div class="panel" id="revoked-panel" style="display: none;">
                 <div class="title" style="color: #ff0000cf;">Document revoked</div>
                 <p style="color: #ff0000cf; margin-bottom: 0">This document has been revoked by the author.</p>
-            </div>
+            </div-->
             <div class="panel">
-                <p class="title">Search for Files</p>
-                <div id="compare-panel">
+                <p class="title">Edit Files</p>
+                <div id="edit-panel">
                     <div class="dragndrop" id="file-drop">
                         <input type="file" id="file" name="file">
                         <p>
@@ -121,7 +121,7 @@
                             </label>
                         </p>
                     </div>
-                    <div id="compare-sidebar" style="">
+                    <div id="edit-sidebar" style="">
                         <div class="banner-right">Searching</div>
                         <div class="progressbar" style="height: 80px; margin: 20px 20px 0 0">
                             <div style="display: flex;">
@@ -148,16 +148,23 @@
                         <div id="sidebar-bottom" style="">
                             <div class="title">Hash</div>
                             <div class="content" id="file-hash" style="height: 60px;"></div>
-                            <div class="title">Author</div>
-                            <div class="content" id="author" style="height: 40px;"></div>
+                            <div class="title">Edit</div>
+                            <div id="edit" style="height: 60px;">
+                                <div id="edit-button-container" style="display: none">
+                                    <button id="revoke-button" class="edit-button" style="margin-bottom: 20px; margin-left: 20px">Revoke</button>
+                                    <button id="update-button" class="edit-button" style="margin-bottom: 20px; margin-left: 20px">Update</button>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
 
             </div>
             <div class="panel" id="own-file-panel" style="display: none">
+                <!--
                 <div class="title">Your File</div>
                 <p style="color: white; margin-bottom: 0;">The file you search for is your file. You can revoke it and add documents as successor.</p>
+                -->
             </div>
             <button id="find-button" class="green-button" style="margin-bottom: 20px">
                 Find File
@@ -192,15 +199,16 @@
     dragndrop = document.getElementById('file-drop');
     fileUpload = document.getElementById('file');
     findButton = document.getElementById('find-button');
+    revokeButton = document.getElementById('revoke-button');
+    updateButton = document.getElementById('update-button');
 
     fileLabel = document.getElementById('filename-label');
     progressbar = document.getElementById('searchprogress');
     progressbarLabel = document.getElementById('searchprogress-label');
     fileHash = document.getElementById('file-hash');
-    authorAddress = document.getElementById('author');
+    editAddress = document.getElementById('edit');
 
     notFoundPanel= document.getElementById('not-found-panel');
-    revokedPanel = document.getElementById('revoked-panel');
     nextPane = document.getElementById('next-pane');
     nextFileHash = document.getElementById('nextHash');
     nextButton = document.getElementById('next-button');
@@ -236,6 +244,15 @@
         }
     };
 
+    revokeButton.onclick = function (ev) {
+        // if file already revoked, turn button green and change text to "unrevoke"
+        // if file not revoked yet, turn button red
+    };
+
+    updateButton.onclick = function (ev) {
+        
+    };
+
     function searchForNext() {
         fileLabel.textContent = "Successor to " + window.nextHash.slice(0, 5) + "..." + window.nextHash.slice(window.nextHash.length - 4, window.nextHash.length - 1);
         fileHash.textContent = window.nextHash;
@@ -243,7 +260,7 @@
         revokedPanel.style.display = "none";
         nextPane.style.display = "none";
         notFoundPanel.style.display = "none";
-        authorAddress.textContent = "";
+        editAddress.textContent = "";
         ownFilePanel.style.display = "none";
         searchFile()
     }
@@ -256,13 +273,13 @@
             }
             
             if (result.exists) {
-                console.log(result['author']);
+                console.log(result['edit']);
                 console.log(result['revoked']);
-                if (result.author) {
-                    authorAddress.textContent = result.author;
-                    if (accounts && accounts.map(element => element.toLowerCase()).includes(result.author.toLowerCase())) {
+                if (result.edit) {
+                    editAddress.textContent = result.edit;
+                    if (accounts && accounts.map(element => element.toLowerCase()).includes(result.edit.toLowerCase())) {
                         ownFilePanel.style.display = "block";
-                        authorAddress.textContent = result.author + " (you)"
+                        editAddress.textContent = result.edit + " (you)"
                     }
                 }
                 if (result.next !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
