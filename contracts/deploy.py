@@ -85,7 +85,7 @@ address = tx_receipt.contractAddress
 print("Contract address: %s" % address)
 
 if write:
-    replace_command = "find ../client/ -type f -exec sed -i.bak -E \"s/contractAddress = '(.+)'/contractAddress = '%s'/g\" {} \;" % (address)
+    replace_command = "find ../client/ -type f -exec sed -i -E \"s/contractAddress = '(.+)'/contractAddress = '%s'/g\" {} \;" % (address)
     ret = subprocess.call([replace_command], shell=True)
     if ret == 0:
         print("Successfully changed contract address in web interface files")
