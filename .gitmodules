@@ -2,6 +2,3 @@
 	path = parity-deploy
 	url = https://github.com/MaxXor/parity-deploy.git
 	branch = aura
-[submodule "contracts/openzeppelin-solidity"]
-	path = contracts/openzeppelin-solidity
-	url = https://github.com/OpenZeppelin/openzeppelin-solidity
