@@ -266,7 +266,7 @@
     }
 
     function searchFile() {
-        documentsContract.methods.documents(web3.utils.soliditySha3({ type: 'bytes32', value: window.selectedFileHash })).call(function(error, result) {
+        documentsContract.methods.documents(window.selectedFileHash).call(function(error, result) {
             if (error) {
                 console.log(error);
                 return;
