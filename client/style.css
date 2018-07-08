@@ -94,6 +94,7 @@ nav ul a li:hover {
 .dragndrop[disabled=true] {
     opacity: 0.2;
     border: dashed rgba(255,255,255,0.5) 2px;
+    pointer-events: none;
 }
 
 .dragndrop input {
@@ -125,6 +126,10 @@ nav ul a li:hover {
     box-shadow: 0 1px 5px -1px #000;
     display: inline;
 
+}
+
+.dragndrop[disabled=true] label {
+    pointer-events: none;
 }
 
 .dragndrop label svg {
@@ -177,6 +182,11 @@ nav ul a li:hover {
     box-shadow: 0 1px 5px -1px #000;
     font-size: 1em;
     margin-top: 20px;
+}
+
+.green-button:disabled, .green-button[disabled] {
+    opacity: 0.5;
+    background-color: #64CBB9;
 }
 
 .edit-button {

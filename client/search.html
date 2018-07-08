@@ -252,12 +252,15 @@
 <script src="web3.min.js"></script>
 <script>
     // Web3
-    var contractAddress = '0x3f103d4d78051a993Abd300CA688e9565B9FF5e6';
+    var contractAddress = '0x54bB26e377d80c344C926978FCB5743361F99E30';
     var web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
     var documentsContract = new web3.eth.Contract([{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"documents","outputs":[{"name":"author","type":"address"},{"name":"hash","type":"bytes32"},{"name":"next","type":"bytes32"},{"name":"exists","type":"bool"},{"name":"revoked","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"}],"name":"addDocument","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"fee","type":"uint256"}],"name":"setDocumentFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"oldHash","type":"bytes32"},{"name":"newHash","type":"bytes32"}],"name":"updateDocument","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"},{"name":"revoke","type":"bool"}],"name":"setRevoke","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"DocumentAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldHash","type":"bytes32"},{"indexed":false,"name":"newHash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"HashUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"},{"indexed":false,"name":"newStatus","type":"bool"}],"name":"RevokeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}], contractAddress);
     if (web3.currentProvider.isMetaMask) {
         web3.eth.getAccounts().then(function (response) {
-            window.accounts = response;
+            if (response.length !== 0) {
+                window.accountAddress = response[0];
+            }
+
         }, function (error) {
             console.log(error);
         })
@@ -314,6 +317,9 @@
 
     findButton.onclick = function () {
         errorPanel.style.display = "none";
+        revokedPanel.style.display = "none";
+        notFoundPanel.style.display = "none";
+        ownFilePanel.style.display = "none";
         if (window.selectedFile && window.selectedFileHash) {
             findButton.disabled = true;
             dragndrop.ondrop = function (e) {
@@ -347,9 +353,9 @@
     };
 
     updateButton.onclick = function () {
-        if (window.updatedSelectedFile && window.updatedSelectedFileHash && window.selectedFile && window.selectedFileHash) {
+        if (window.accountAddress && window.updatedSelectedFile && window.updatedSelectedFileHash && window.selectedFile && window.selectedFileHash) {
             documentsContract.methods.updateDocument(window.selectedFileHash, window.updatedSelectedFileHash).send({
-                from: window.accounts[0]
+                from: window.accountAddress
             }, function (result) {
                 if (result instanceof Error){
                     console.log(result)
@@ -373,9 +379,9 @@
     };
 
     function updateRevoked(fileHash, revoked) {
-        if (fileHash) {
+        if (fileHash && window.accountAddress) {
             documentsContract.methods.setRevoke(fileHash, revoked).send({
-                from: window.accounts[0]
+                from: window.accountAddress
             }, function (result) {
                 if (result instanceof Error){
                     console.log(result)
@@ -386,7 +392,7 @@
     }
 
     function searchForNext() {
-        fileLabel.textContent = "Successor to " + window.nextHash.slice(0, 5) + "..." + window.nextHash.slice(window.nextHash.length - 4, window.nextHash.length - 1);
+        fileLabel.textContent = "Successor to " + window.selectedFileHash.slice(0, 5) + "..." + window.selectedFileHash.slice(window.selectedFileHash.length - 4, window.selectedFileHash.length);
         fileHash.textContent = window.nextHash;
         window.selectedFileHash = window.nextHash;
         revokedPanel.style.display = "none";
@@ -404,9 +410,11 @@
                 errorPanel.style.display = "block";
             } else {
                 if (result.exists) {
+                    updateDragndrop.setAttribute('disabled', 'false');
+                    updateButton.removeAttribute('disabled');
                     if (result.author) {
                         authorAddress.textContent = result.author;
-                        if (accounts && accounts.map(element => element.toLowerCase()).includes(result.author.toLowerCase())) {
+                        if (window.accountAddress && window.accountAddress.toLowerCase() === result.author.toLowerCase()) {
                             ownFilePanel.style.display = "block";
                             authorAddress.textContent = result.author + " (you)";
                             if (result.revoked) {
@@ -419,6 +427,8 @@
                         }
                     }
                     if (result.next !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
+                        updateDragndrop.setAttribute('disabled', 'true');
+                        updateButton.disabled = true;
                         window.nextHash = result.next;
                         nextFileHash.textContent = result.next;
                         nextPane.style.display = "block";
@@ -456,9 +466,10 @@
             fileLabel.textContent = window.selectedFile.name;
             window.selectedFileHash = "";
             fileHash.textContent = "";
+            authorAddress.textContent = "";
             fr.readAsText(window.selectedFile);
             fr.onload = function (evt) {
-                if (evt.target.readyState != 2) return;
+                if (evt.target.readyState !== 2) return;
                 if (evt.target.error) {
                     alert('Error while reading file');
                     return;
@@ -481,7 +492,7 @@
             updateFileHash.textContent = "";
             fr.readAsText(window.updatedSelectedFile);
             fr.onload = function (evt) {
-                if (evt.target.readyState != 2) return;
+                if (evt.target.readyState !== 2) return;
                 if (evt.target.error) {
                     alert('Error while reading file');
                     return;
