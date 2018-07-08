@@ -9,8 +9,8 @@
 
 \title{IuK-Blockchain}
 \subtitle{Progress report}
-\author{\textsc{Robert Kohlen}\newline\textsc{Richard Dabels}\newline\textsc{Maximilian Jung}\newline\textsc{Daniel Decker}\newline\textsc{Nis Meinert}}
-\date{03.06.2018}
+\author{\textsc{Robert Kohlen}\newline\textsc{Richard Dabels}\newline\textsc{Maximilian Jung}\newline\textsc{Nis Meinert}}
+\date{09.07.2018}
 \footinstitute{Institut für Informatik}
 
 \addbibresource{./references.bib}
@@ -37,14 +37,14 @@
 		\item Add/update/revoke documents (in form of checksums) on the blockchain
 		\item Address on the blockchain represents the identity of the author
 		\item Author can be validated by signing a message with the private key which belongs to his address
-		\item Authentication of authors is harder and only possible via side-channel
+		%\item Authentication of authors is harder and only possible via side-channel
 	\end{itemize}
 \end{frame}
 
 \begin{frame}{Platform}
 	\begin{itemize}
 		\item Node software: Parity (Ethereum)
-		\item Web interface: HTML5 + CSS3 + web3.js (Javascript ethereum interface)
+		\item Web interface: HTML5 + CSS3 + web3.js (Javascript thereum interface)
 	\end{itemize}
 	\begin{figure}
 		\includegraphics[width=0.5\textwidth]{images/parity-ethereum-logo.png}
@@ -73,39 +73,102 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Interaction with the smart contract - web interface}
+\begin{frame}{Consensus algorithm}
+	\begin{itemize}
+		\item Aura (Authority Round)
+		\item Nodes used as validators
+		\item Each step a \textit{primary} is assigned
+		\item The \textit{primary} is the only node to produce a block in a step
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Aura - primary}
+	\begin{itemize}
+		\item Let $n$ be the number of nodes
+		\item Let $s$ be the index of the step
+		\item Primary for step $s$: Node with index $s$ mod $n$
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Aura - primary}
+	\begin{itemize}
+		\item $s = 9, n = 8 \rightarrow PRIMARY = NODE_1$
+	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=0.8\textwidth]{images/aura_2.png}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Aura - primary}
+	\begin{itemize}
+		\item $s = 10, n = 8 \rightarrow PRIMARY = NODE_2$
+	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=0.8\textwidth]{images/aura_3.png}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Aura - primary}
+	\begin{itemize}
+		\item $s =11, n = 8 \rightarrow PRIMARY = NODE_3$
+	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=0.8\textwidth]{images/aura_4.png}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Aura - finality}
+	\begin{itemize}
+		\item Let $SIG\_SET(B)$ be the set of signatures from all validators in block $B$
+		\item $SIG\_SET(B) = \{s|\exists b \in B: VALIDATOR(b) = s\}$
+		\item If a valid chain $C$ ending with $C[K..]$, where $|SIG\_SET(C[K..])| > \frac{n}{2}$, then $C[K]$ and ancestors are finalized
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Aura - empty steps}
+	\begin{itemize}
+		\item Let $t$ be the step duration in seconds
+		\item Each step $s$ has a duration of $t$
+		\item To reach finality in time even blocks without transactions need to be sealed
+		\item In order to reduce bloat, an $EmptyStep(step, parent\_hash)$ message can be broadcast
+		\item Empty steps are included in the next non-empty block
+	\end{itemize}
+\end{frame}
+
+\begin{frame}{Web interface}
 	\begin{itemize}
 		\item Metamask (browser extension) for interaction with the blockchain
 	\end{itemize}
 	\begin{figure}
-		\includegraphics[width=0.78\textwidth]{images/GUI-180603_1.png}
+		\includegraphics[width=0.3\textwidth]{images/mm-logo.png}
 	\end{figure}
 \end{frame}
 
-\begin{frame}{\textbf{Some} possible attack scenarios}
+\begin{frame}{Web interface}
 	\begin{itemize}
-		\item Block document checksums by adding a large number of checksums
-		\begin{itemize}
-			\item Prevention: hash function with sufficient length, e.g. SHA256
-			\item Pre-computation of possible checksums not plausible (One-Way-Function)
-		\end{itemize}
-		\item DDoS validator nodes to prevent interaction with the smart contract
-		\begin{itemize}
-			\item Prevention: Good firewall or fallback servers
-		\end{itemize}
-		\item Misbehaving/malicious validator nodes
-		\begin{itemize}
-			\item Countermeasure: Revoke validator rights
-		\end{itemize}
+		\item Uploading files
 	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=0.9\textwidth]{images/upload.png}
+	\end{figure}
 \end{frame}
 
-\begin{frame}{Open questions}
+\begin{frame}{Web interface}
 	\begin{itemize}
-		\item Should author of an document be changeable?
-		%Would an attacker free the document by himself?
-		\item Remove revoked documents from contract after x blocks?
+		\item Searching for files
 	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=0.9\textwidth]{images/search.png}
+	\end{figure}
+\end{frame}
+
+\begin{frame}{Web interface}
+	\begin{itemize}
+		\item Adding new revisions and revoking files
+	\end{itemize}
+	\begin{figure}
+		\includegraphics[width=0.9\textwidth]{images/edit.png}
+	\end{figure}
 \end{frame}
 
 %\begin{frame}[allowframebreaks]{References}
