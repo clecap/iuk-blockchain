@@ -7,8 +7,8 @@
 \usepackage[uni,footuni,headframelogo]{./unirostock/beamerthemeRostock}
 \usepackage{scrhack} %Fix for older packages
 
-\title{IuK-Blockchain}
-\subtitle{Progress report}
+\title{IuK Blockchain}
+\subtitle{Final presentation}
 \author{\textsc{Robert Kohlen}\newline\textsc{Richard Dabels}\newline\textsc{Maximilian Jung}\newline\textsc{Nis Meinert}}
 \date{09.07.2018}
 \footinstitute{Institut für Informatik}
@@ -75,8 +75,8 @@
 
 \begin{frame}{Consensus algorithm}
 	\begin{itemize}
-		\item Aura (Authority Round)
-		\item Nodes used as validators
+		\item Authority Round (Aura)
+		\item Nodes used as validators and seal transactions into blocks
 		\item Each step a \textit{primary} is assigned
 		\item The \textit{primary} is the only node to produce a block in a step
 	\end{itemize}
@@ -91,11 +91,31 @@
 \end{frame}
 
 \begin{frame}{Aura - primary}
-	\begin{itemize}
-		\item $s = \frac{UNIXtime}{t}$
-		\item Primary for step $s$: Node with index $s$ mod $n$
-		\item Empty steps possible if no transaction in $t$ seconds
-	\end{itemize}
+	\begin{columns}
+		\begin{column}{0.48\textwidth}
+			\begin{itemize}
+				\item $s = \frac{UNIXtime}{t}$
+				\item Primary for step $s$: Node with index $s$ mod $n$
+				\item Empty steps possible if no transaction in $t$ seconds
+			\end{itemize}
+		\end{column}
+		\begin{column}{0.48\textwidth}
+			\begin{itemize}
+				\item Example with $t = 5$ and $n = 3$ at timestamp 1200
+				\item $s = \frac{1200}{5} = 240$
+				\item $i = 240$ mod $3 = 0$
+			\end{itemize}
+			\vspace{5mm}
+			\begin{tabular}{ | c | c | }
+				\hline
+				Nodes & Index \\\hline
+				\cellcolor{green} Node 1 & \cellcolor{green} 0 \\\hline
+				Node 2 & 1 \\\hline
+				Node 3 & 2 \\
+				\hline
+			\end{tabular}
+		\end{column}
+	\end{columns}
 \end{frame}
 
 \begin{frame}{Web interface}
