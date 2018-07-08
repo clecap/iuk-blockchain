@@ -86,7 +86,7 @@
         }
     </style>
 </head>
-<body>
+<body style="overflow: hidden">
 <div id="header">
     <h1>IuK-Blockchain</h1>
 </div>
@@ -344,14 +344,14 @@
 
     updateFileUpload.onchange = function (ev) {
         window.updatedSelectedFile = ev.target.files[0];
+        scrollTo(0,0);
         updateUpdatedFile();
     };
 
     updateButton.onclick = function (ev) {
         if (window.updatedSelectedFile && window.updatedSelectedFileHash && window.selectedFile && window.selectedFileHash) {
             documentsContract.methods.updateDocument(window.selectedFileHash, window.updatedSelectedFileHash).send({
-                from: accountAddress,
-                value: 1000000000000000
+                from: window.accounts[0]
             }, function (result) {
                 if (result instanceof Error){
                     console.log(result)
@@ -377,8 +377,7 @@
     function updateRevoked(fileHash, revoked) {
         if (fileHash) {
             documentsContract.methods.setRevoke(fileHash, revoked).send({
-                from: accountAddress,
-                value: 1000000000000000
+                from: window.accounts[0]
             }, function (result) {
                 if (result instanceof Error){
                     console.log(result)
