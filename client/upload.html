@@ -93,7 +93,7 @@
     web3.eth.getAccounts().then(function(resolved) {
         if (resolved.length !== 0) {
             console.log(resolved);
-            window.accountAdress = resolved[0];
+            window.accountAddress = resolved[0];
         } else {
             addressError = document.getElementById('addressError').style.display = "block";
         }
@@ -131,9 +131,9 @@
         };
 
         uploadButton.onclick = function (ev) {
-            console.log(accountAdress);
             documentsContract.methods.addDocument(window.hash).send({
-                from: accountAdress
+                from: accountAddress,
+                value: 1000000000000000
             }, function (result) {
                 if (result instanceof Error){
                     console.log(result)
@@ -160,7 +160,7 @@
                 var hash = web3.utils.soliditySha3(fr.result);
                 window.hash = hash;
                 fileHash.textContent = hash;
-                if (window.accountAdress) {
+                if (window.accountAddress) {
                     uploadButton.disabled = false;
                 }
             }
