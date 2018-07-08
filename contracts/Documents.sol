@@ -46,9 +46,7 @@ contract Documents is Ownable {
         emit DocumentAdded(hash, msg.sender);
     }
 
-    function updateDocument(bytes32 oldHash, bytes32 newHash) public
-        onlyAuthor(oldHash) {
-        
+    function updateDocument(bytes32 oldHash, bytes32 newHash) external onlyAuthor(oldHash) {
         bytes32 c = oldHash;
         while (documents[c].next != 0) {
             c = documents[c].next;
@@ -62,9 +60,7 @@ contract Documents is Ownable {
         emit HashUpdated(oldHash, newHash, msg.sender);
     }
 
-    function setRevoke(bytes32 hash, bool revoke) public
-        onlyAuthor(hash) {
-        
+    function setRevoke(bytes32 hash, bool revoke) external onlyAuthor(hash) {
         bool current = documents[hash].revoked;
         if (current != revoke) {
             documents[hash].revoked = revoke;
