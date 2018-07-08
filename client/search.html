@@ -62,6 +62,21 @@
             }
         }
 
+        .loader {
+            border: 3px solid #e0e0e0;
+            border-top: 3px solid #349B89;
+            border-radius: 50%;
+            width: 10px;
+            height: 10px;
+            animation: spin 1s linear infinite;
+            margin: 5px;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
         @media (max-width: 500px) {
 
         }
@@ -90,6 +105,10 @@
 
     <div id="main" style="position:relative;">
         <div id="main-content">
+            <div class="panel" id="error-panel" style="display: none">
+                <div class="title" style="color: #ff0000cf;">Error</div>
+                <p style="color: #ff0000cf; margin-bottom: 0">An error occurred while searching. Please refer to the Javascipt console for more detail.</p>
+            </div>
             <div class="panel" id="not-found-panel" style="display: none">
                 <div class="title">Document not found</div>
                 <p style="color: white; margin-bottom: 0">The document you searched for couldn't be found.</p>
@@ -126,11 +145,7 @@
                         <div class="progressbar" style="height: 80px; margin: 20px 20px 0 0">
                             <div style="display: flex;">
                                 <svg style="margin: auto 10px auto 0" height="35px" version="1.1" viewBox="0 0 32 32"
-                                     width="35px" xmlns="http://www.w3.org/2000/svg"
-                                     xmlns:sketch="http://www.bohemiancoding.com/sketch/ns"
-                                     xmlns:xlink="http://www.w3.org/1999/xlink"><title/>
-                                    <desc/>
-                                    <defs/>
+                                     width="35px" xmlns="http://www.w3.org/2000/svg">
                                     <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
                                         <g fill="#929292" id="icon-55-document-text">
                                             <path d="M19.5,3 L9.00276013,3 C7.89666625,3 7,3.89833832 7,5.00732994 L7,27.9926701 C7,29.1012878 7.89092539,30 8.99742191,30 L24.0025781,30 C25.1057238,30 26,29.1017876 26,28.0092049 L26,10.5 L26,10 L20,3 L19.5,3 L19.5,3 L19.5,3 Z M19,4 L8.9955775,4 C8.44573523,4 8,4.45526288 8,4.99545703 L8,28.004543 C8,28.5543187 8.45470893,29 8.9999602,29 L24.0000398,29 C24.5523026,29 25,28.5550537 25,28.0066023 L25,11 L20.9979131,11 C19.8944962,11 19,10.1134452 19,8.99408095 L19,4 L19,4 Z M20,4.5 L20,8.99121523 C20,9.54835167 20.4506511,10 20.9967388,10 L24.6999512,10 L20,4.5 L20,4.5 Z M10,10 L10,11 L17,11 L17,10 L10,10 L10,10 Z M10,7 L10,8 L17,8 L17,7 L10,7 L10,7 Z M10,13 L10,14 L23,14 L23,13 L10,13 L10,13 Z M10,16 L10,17 L23,17 L23,16 L10,16 L10,16 Z M10,19 L10,20 L23,20 L23,19 L10,19 L10,19 Z M10,22 L10,23 L23,23 L23,22 L10,22 L10,22 Z M10,25 L10,26 L23,26 L23,25 L10,25 L10,25 Z"
@@ -140,8 +155,14 @@
                                 </svg>
                                 <div style="width: calc(100% - 35px);">
                                     <p id="filename-label">No file selected</p>
-                                    <progress id="searchprogress" value="0" max="100"></progress>
-                                    <p id="searchprogress-label" style="opacity: 0.6">0% searched</p>
+                                    <div  style="height: 25px;">
+                                        <div id="search-info" style="display: none;">
+                                            <p style="opacity: 0.6;">Searching...</p>
+                                            <div class="loader"></div>
+                                        </div>
+
+                                    </div>
+
                                 </div>
                             </div>
                         </div>
@@ -173,9 +194,6 @@
 
 <script src="web3.min.js"></script>
 <script>
-
-</script>
-<script>
     var contractAddress = '0x3f103d4d78051a993Abd300CA688e9565B9FF5e6';
     var web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
     var documentsContract = new web3.eth.Contract([{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"documents","outputs":[{"name":"author","type":"address"},{"name":"hash","type":"bytes32"},{"name":"next","type":"bytes32"},{"name":"exists","type":"bool"},{"name":"revoked","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"}],"name":"addDocument","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":true,"inputs":[{"name":"hash","type":"bytes32"}],"name":"getAuthor","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"fee","type":"uint256"}],"name":"setDocumentFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"oldHash","type":"bytes32"},{"name":"newHash","type":"bytes32"}],"name":"updateDocument","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"},{"name":"revoke","type":"bool"}],"name":"setRevoke","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"DocumentAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldHash","type":"bytes32"},{"indexed":false,"name":"newHash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"HashUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"},{"indexed":false,"name":"newStatus","type":"bool"}],"name":"RevokeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}], contractAddress);
@@ -194,11 +212,11 @@
     findButton = document.getElementById('find-button');
 
     fileLabel = document.getElementById('filename-label');
-    progressbar = document.getElementById('searchprogress');
-    progressbarLabel = document.getElementById('searchprogress-label');
+    seachInfo = document.getElementById('search-info');
     fileHash = document.getElementById('file-hash');
     authorAddress = document.getElementById('author');
 
+    errorPanel = document.getElementById('error-panel');
     notFoundPanel= document.getElementById('not-found-panel');
     revokedPanel = document.getElementById('revoked-panel');
     nextPane = document.getElementById('next-pane');
@@ -224,12 +242,14 @@
     };
 
     findButton.onclick = function (ev) {
+        errorPanel.style.display = "none";
         if (window.selectedFile && window.selectedFileHash) {
             findButton.disabled = true;
             dragndrop.ondrop = function (e) {
                 e.preventDefault();
             };
             dragndrop.setAttribute("disabled", "true");
+            seachInfo.style.display = "flex";
             searchFile()
         } else {
             alert("Either no file is selected or the file is not hashed yet")
@@ -252,38 +272,48 @@
         documentsContract.methods.documents(window.selectedFileHash).call(function(error, result) {
             if (error) {
                 console.log(error);
-                return;
+                errorPanel.style.display = "block";
+            } else  {
+                if (result.exists) {
+                    console.log(result['author']);
+                    console.log(result['revoked']);
+                    if (result.author) {
+                        authorAddress.textContent = result.author;
+                        if (accounts && accounts.map(element => element.toLowerCase()).includes(result.author.toLowerCase())) {
+                            ownFilePanel.style.display = "block";
+                            authorAddress.textContent = result.author + " (you)"
+                        }
+                    }
+                    if (result.next !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
+                        window.nextHash = result.next;
+                        nextFileHash.textContent = result.next;
+                        nextPane.style.display = "block";
+                        nextButton.onclick = function (ev) {
+                            if (window.nextFileHash) {
+                                searchForNext()
+                            }
+                        };
+                        mainContentElement.scrollTo(0,0);
+                    }
+                    if (result.revoked) {
+                        revokedPanel.style.display = "block";
+                        mainContentElement.scrollTo(0,0);
+                    }
+                } else {
+                    notFoundPanel.style.display = "block";
+                    mainContentElement.scrollTo(0,0);
+                }
             }
             
-            if (result.exists) {
-                console.log(result['author']);
-                console.log(result['revoked']);
-                if (result.author) {
-                    authorAddress.textContent = result.author;
-                    if (accounts && accounts.map(element => element.toLowerCase()).includes(result.author.toLowerCase())) {
-                        ownFilePanel.style.display = "block";
-                        authorAddress.textContent = result.author + " (you)"
-                    }
-                }
-                if (result.next !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
-                    window.nextHash = result.next;
-                    nextFileHash.textContent = result.next;
-                    nextPane.style.display = "block";
-                    nextButton.onclick = function (ev) {
-                        if (window.nextFileHash) {
-                            searchForNext()
-                        }
-                    };
-                    mainContentElement.scrollTo(0,0);
-                }
-                if (result.revoked) {
-                    revokedPanel.style.display = "block";
-                    mainContentElement.scrollTo(0,0);
-                }
-            } else {
-                notFoundPanel.style.display = "block";
-                mainContentElement.scrollTo(0,0);
-            }
+
+            findButton.disabled = false;
+            dragndrop.ondrop = function (e) {
+                e.preventDefault();
+                window.selectedFile = e.dataTransfer.files[0];
+                updateFile();
+            };
+            dragndrop.setAttribute("disabled", "false");
+            seachInfo.style.display = "none";
         });
     }
 
