@@ -5,59 +5,59 @@
     <title>IuK-Blockchain: File Comparison</title>
     <link href="style.css" rel="stylesheet">
     <style>
-        #compare-panel {
+        .search-panel {
             display: flex;
             margin-right: -20px;
         }
 
-        #file-drop {
+        .dragndrop {
             width: 45%;
             height: 400px;
         }
 
-        #file-drop > p {
+        .dragndrop > p {
             height: 400px;
             line-height: 400px;
         }
 
-        #compare-sidebar {
+        .right-sidebar {
             width: 45%;
             margin-left: auto;
             position: relative
         }
 
-        #sidebar-bottom {
+        .sidebar-bottom {
             position: absolute;
             bottom: 0;
             width: calc(100% - 20px)
         }
 
         @media screen and (max-width: 1000px) {
-            #file-drop {
+            .dragndrop {
                 width: unset;
                 height: 200px;
             }
 
-            #file-drop > p {
+            .dragndrop > p {
                 height: 200px;
                 line-height: 200px;
             }
 
-            #compare-panel {
+            .search-panel{
                 display: block;
                 width: 100%;
             }
 
-            #compare-sidebar {
+            .right-sidebar {
                 width: 100%;
             }
 
-            #compare-sidebar .banner-right {
+            .right-sidebar .banner-right {
                 margin-right: -20px;
                 margin-top: 20px;
             }
 
-            #sidebar-bottom {
+            .sidebar-bottom {
                 position: relative;
             }
         }
@@ -73,8 +73,12 @@
         }
 
         @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
+            0% {
+                transform: rotate(0deg);
+            }
+            100% {
+                transform: rotate(360deg);
+            }
         }
 
         @media (max-width: 500px) {
@@ -107,7 +111,8 @@
         <div id="main-content">
             <div class="panel" id="error-panel" style="display: none">
                 <div class="title" style="color: #ff0000cf;">Error</div>
-                <p style="color: #ff0000cf; margin-bottom: 0">An error occurred while searching. Please refer to the Javascipt console for more detail.</p>
+                <p style="color: #ff0000cf; margin-bottom: 0">An error occurred while searching. Please refer to the
+                    Javascipt console for more detail.</p>
             </div>
             <div class="panel" id="not-found-panel" style="display: none">
                 <div class="title">Document not found</div>
@@ -115,8 +120,12 @@
             </div>
             <div class="panel" id="next-pane" style="display: none">
                 <div class="title">Successor document found</div>
-                <p style="color: white;">A successor document has been found for the document you searched for. It's hash is:<br> <div id="nextHash" style="color: white; word-wrap: break-word"></div></p>
-                <button id="next-button" class="green-button" style="width: 190px">Search for successor document</button>
+                <p style="color: white;">A successor document has been found for the document you searched for. It's
+                    hash is:<br>
+                <div id="nextHash" style="color: white; word-wrap: break-word"></div>
+                </p>
+                <button id="next-button" class="green-button" style="width: 190px">Search for successor document
+                </button>
             </div>
             <div class="panel" id="revoked-panel" style="display: none;">
                 <div class="title" style="color: #ff0000cf;">Document revoked</div>
@@ -124,7 +133,7 @@
             </div>
             <div class="panel">
                 <p class="title">Search for Files</p>
-                <div id="compare-panel">
+                <div id="compare-panel" class="search-panel">
                     <div class="dragndrop" id="file-drop">
                         <input type="file" id="file" name="file">
                         <p>
@@ -140,7 +149,7 @@
                             </label>
                         </p>
                     </div>
-                    <div id="compare-sidebar" style="">
+                    <div id="compare-sidebar" class="right-sidebar" style="">
                         <div class="banner-right">Searching</div>
                         <div class="progressbar" style="height: 80px; margin: 20px 20px 0 0">
                             <div style="display: flex;">
@@ -155,18 +164,16 @@
                                 </svg>
                                 <div style="width: calc(100% - 35px);">
                                     <p id="filename-label">No file selected</p>
-                                    <div  style="height: 25px;">
+                                    <div style="height: 25px;">
                                         <div id="search-info" style="display: none;">
                                             <p style="opacity: 0.6;">Searching...</p>
                                             <div class="loader"></div>
                                         </div>
-
                                     </div>
-
                                 </div>
                             </div>
                         </div>
-                        <div id="sidebar-bottom" style="">
+                        <div class="sidebar-bottom" style="">
                             <div class="title">Hash</div>
                             <div class="content" id="file-hash" style="height: 60px;"></div>
                             <div class="title">Author</div>
@@ -176,16 +183,69 @@
                 </div>
 
             </div>
-            <div class="panel" id="own-file-panel" style="display: none">
-                <div class="title">Your File</div>
-                <p style="color: white; margin-bottom: 0;">The file you search for is your file. You can revoke it and add documents as successor.</p>
-            </div>
+
             <button id="find-button" class="green-button" style="margin-bottom: 20px">
                 Find File
             </button>
-        </div>
-        <div style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; box-shadow: inset 5px 6px 5px -6px; pointer-events: none">
-            <!--Element for inner shadow of main content-->
+
+            <div class="panel" id="own-file-panel" style="display: none">
+                <div class="title">Update your File</div>
+                <p style="color: white;">The file you searched for is your file. You can update or revoke it right
+                    below.</p>
+                <div class="search-panel">
+                    <div id="update-file-drop" class="dragndrop" style="height: 300px">
+                        <input type="file" id="update-file" name="updateFile">
+                        <p style="height: 300px; line-height: 300px;">
+                            Drop new file here or
+                            <label for="update-file">
+                                <svg width="13" height="13" xmlns="http://www.w3.org/2000/svg" version="1.1">
+                                    <line x1="7" x2="7" y1="0" y2="13" stroke="white" stroke-width="1"
+                                          stroke-linecap="butt"/>
+                                    <line x1="0" x2="13" y1="7" y2="7" stroke="white" stroke-width="1"
+                                          stroke-linecap="butt"/>
+                                </svg>
+                                Add File
+                            </label>
+                        </p>
+                    </div>
+                    <div style="" class="right-sidebar">
+                        <div class="banner-right">Update</div>
+                        <div class="progressbar" style="height: 80px; margin: 20px 20px 0 0">
+                            <div style="display: flex;">
+                                <svg style="margin: auto 10px auto 0" height="35px" version="1.1" viewBox="0 0 32 32"
+                                     width="35px" xmlns="http://www.w3.org/2000/svg">
+                                    <g fill="none" fill-rule="evenodd" id="Page-1" stroke="none" stroke-width="1">
+                                        <g fill="#929292" id="icon-55-document-text">
+                                            <path d="M19.5,3 L9.00276013,3 C7.89666625,3 7,3.89833832 7,5.00732994 L7,27.9926701 C7,29.1012878 7.89092539,30 8.99742191,30 L24.0025781,30 C25.1057238,30 26,29.1017876 26,28.0092049 L26,10.5 L26,10 L20,3 L19.5,3 L19.5,3 L19.5,3 Z M19,4 L8.9955775,4 C8.44573523,4 8,4.45526288 8,4.99545703 L8,28.004543 C8,28.5543187 8.45470893,29 8.9999602,29 L24.0000398,29 C24.5523026,29 25,28.5550537 25,28.0066023 L25,11 L20.9979131,11 C19.8944962,11 19,10.1134452 19,8.99408095 L19,4 L19,4 Z M20,4.5 L20,8.99121523 C20,9.54835167 20.4506511,10 20.9967388,10 L24.6999512,10 L20,4.5 L20,4.5 Z M10,10 L10,11 L17,11 L17,10 L10,10 L10,10 Z M10,7 L10,8 L17,8 L17,7 L10,7 L10,7 Z M10,13 L10,14 L23,14 L23,13 L10,13 L10,13 Z M10,16 L10,17 L23,17 L23,16 L10,16 L10,16 Z M10,19 L10,20 L23,20 L23,19 L10,19 L10,19 Z M10,22 L10,23 L23,23 L23,22 L10,22 L10,22 Z M10,25 L10,26 L23,26 L23,25 L10,25 L10,25 Z"
+                                                  id="document-text"/>
+                                        </g>
+                                    </g>
+                                </svg>
+                                <div style="width: calc(100% - 35px);">
+                                    <p id="update-filename-label">No file selected</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div style="" class="sidebar-bottom">
+                            <div class="title">Hash</div>
+                            <div id="update-hash" class="content" style="height: 60px;"></div>
+                            <button id="update-button" class="green-button">Update Hash</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="title" style="margin-top: 30px;">Revocation</div>
+                <div id="unrevoke-field" style="display: none">
+                    <p style="color: white; margin: 0">Your document has been revoked by you. You can cancel your revocation by pressing the button down below.</p>
+                    <button id="unrevoke-button" class="green-button">Cancel Revocation</button>
+                </div>
+                <div id="revoke-field" style="display: none">
+                    <p style="color: white; margin: 0">You can revoke your own documents by pressing the button.</p>
+                    <button id="revoke-button" class="green-button">Revoke</button>
+                </div>
+            </div>
+            <div style="position: absolute; top: 0; bottom: 0; left: 0; right: 0; box-shadow: inset 5px 6px 5px -6px; pointer-events: none">
+                <!--Element for inner shadow of main content-->
+            </div>
         </div>
     </div>
 </div>
@@ -194,6 +254,7 @@
 
 <script src="web3.min.js"></script>
 <script>
+    // Web3
     var contractAddress = '0x3f103d4d78051a993Abd300CA688e9565B9FF5e6';
     var web3 = new Web3(Web3.givenProvider || 'http://localhost:8545');
     var documentsContract = new web3.eth.Contract([{"constant":true,"inputs":[{"name":"","type":"bytes32"}],"name":"documents","outputs":[{"name":"author","type":"address"},{"name":"hash","type":"bytes32"},{"name":"next","type":"bytes32"},{"name":"exists","type":"bool"},{"name":"revoked","type":"bool"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[],"name":"withdraw","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"}],"name":"addDocument","outputs":[],"payable":true,"stateMutability":"payable","type":"function"},{"constant":false,"inputs":[],"name":"renounceOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"fee","type":"uint256"}],"name":"setDocumentFee","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"owner","outputs":[{"name":"","type":"address"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"oldHash","type":"bytes32"},{"name":"newHash","type":"bytes32"}],"name":"updateDocument","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"hash","type":"bytes32"},{"name":"revoke","type":"bool"}],"name":"setRevoke","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_newOwner","type":"address"}],"name":"transferOwnership","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"DocumentAdded","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"oldHash","type":"bytes32"},{"indexed":false,"name":"newHash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"}],"name":"HashUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":false,"name":"hash","type":"bytes32"},{"indexed":false,"name":"author","type":"address"},{"indexed":false,"name":"newStatus","type":"bool"}],"name":"RevokeUpdated","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"}],"name":"OwnershipRenounced","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"previousOwner","type":"address"},{"indexed":true,"name":"newOwner","type":"address"}],"name":"OwnershipTransferred","type":"event"}], contractAddress);
@@ -205,6 +266,8 @@
         })
     }
     var fr = new FileReader();
+
+    // UI-Elements
     mainContentElement = document.getElementById('main-content');
 
     dragndrop = document.getElementById('file-drop');
@@ -217,12 +280,22 @@
     authorAddress = document.getElementById('author');
 
     errorPanel = document.getElementById('error-panel');
-    notFoundPanel= document.getElementById('not-found-panel');
+    notFoundPanel = document.getElementById('not-found-panel');
     revokedPanel = document.getElementById('revoked-panel');
     nextPane = document.getElementById('next-pane');
     nextFileHash = document.getElementById('nextHash');
     nextButton = document.getElementById('next-button');
+
     ownFilePanel = document.getElementById('own-file-panel');
+    updateDragndrop = document.getElementById('update-file-drop');
+    updateFileUpload = document.getElementById('update-file');
+    updateFileLabel = document.getElementById('update-filename-label');
+    updateFileHash = document.getElementById('update-hash');
+    updateButton = document.getElementById('update-button');
+    unrevokeField = document.getElementById('unrevoke-field');
+    unrevokeButton = document.getElementById('unrevoke-button');
+    revokeField = document.getElementById('revoke-field');
+    revokeButton = document.getElementById('revoke-button');
 
     dragndrop.ondragover = function () {
         return false;
@@ -256,6 +329,65 @@
         }
     };
 
+
+    updateDragndrop.ondragover = function () {
+        return false;
+    };
+    updateDragndrop.ondragend = function () {
+        return false;
+    };
+    updateDragndrop.ondrop = function (e) {
+        e.preventDefault();
+        window.updatedSelectedFile = e.dataTransfer.files[0];
+        updateUpdatedFile();
+    };
+
+    updateFileUpload.onchange = function (ev) {
+        window.updatedSelectedFile = ev.target.files[0];
+        updateUpdatedFile();
+    };
+
+    updateButton.onclick = function (ev) {
+        if (window.updatedSelectedFile && window.updatedSelectedFileHash && window.selectedFile && window.selectedFileHash) {
+            documentsContract.methods.updateDocument(window.selectedFileHash, window.updatedSelectedFileHash).send({
+                from: accountAddress,
+                value: 1000000000000000
+            }, function (result) {
+                if (result instanceof Error){
+                    console.log(result)
+                }
+            });
+        } else {
+            alert("Either no file is selected or the file is not hashed yet")
+        }
+    };
+
+    revokeButton.onclick = function (ev) {
+         if (window.selectedFileHash) {
+             updateRevoked(window.selectedFileHash, true)
+         }
+    };
+
+    unrevokeButton.onclick = function (ev) {
+        if (window.selectedFileHash) {
+            updateRevoked(window.selectedFileHash, false)
+        }
+    };
+
+    function updateRevoked(fileHash, revoked) {
+        if (fileHash) {
+            documentsContract.methods.setRevoke(fileHash, revoked).send({
+                from: accountAddress,
+                value: 1000000000000000
+            }, function (result) {
+                if (result instanceof Error){
+                    console.log(result)
+                }
+            });
+        }
+
+    }
+
     function searchForNext() {
         fileLabel.textContent = "Successor to " + window.nextHash.slice(0, 5) + "..." + window.nextHash.slice(window.nextHash.length - 4, window.nextHash.length - 1);
         fileHash.textContent = window.nextHash;
@@ -269,19 +401,24 @@
     }
 
     function searchFile() {
-        documentsContract.methods.documents(window.selectedFileHash).call(function(error, result) {
+        documentsContract.methods.documents(window.selectedFileHash).call(function (error, result) {
             if (error) {
                 console.log(error);
                 errorPanel.style.display = "block";
-            } else  {
+            } else {
                 if (result.exists) {
-                    console.log(result['author']);
-                    console.log(result['revoked']);
                     if (result.author) {
                         authorAddress.textContent = result.author;
                         if (accounts && accounts.map(element => element.toLowerCase()).includes(result.author.toLowerCase())) {
                             ownFilePanel.style.display = "block";
                             authorAddress.textContent = result.author + " (you)"
+                            if (result.revoked) {
+                                unrevokeField.style.display = "block";
+                                revokeField.style.display = "none";
+                            } else {
+                                unrevokeField.style.display = "none";
+                                revokeField.style.display = "block";
+                            }
                         }
                     }
                     if (result.next !== "0x0000000000000000000000000000000000000000000000000000000000000000") {
@@ -293,18 +430,18 @@
                                 searchForNext()
                             }
                         };
-                        mainContentElement.scrollTo(0,0);
+                        mainContentElement.scrollTo(0, 0);
                     }
                     if (result.revoked) {
                         revokedPanel.style.display = "block";
-                        mainContentElement.scrollTo(0,0);
+                        mainContentElement.scrollTo(0, 0);
                     }
                 } else {
                     notFoundPanel.style.display = "block";
-                    mainContentElement.scrollTo(0,0);
+                    mainContentElement.scrollTo(0, 0);
                 }
             }
-            
+
 
             findButton.disabled = false;
             dragndrop.ondrop = function (e) {
@@ -336,8 +473,30 @@
         } else {
             fileLabel.textContent = "No file selected";
             fileHash.textContent = "";
-            updateProgressbar(0);
             window.selectedFile = null;
+        }
+    }
+
+    function updateUpdatedFile() {
+        if (window.updatedSelectedFile && window.updatedSelectedFile.name) {
+            updateFileLabel.textContent = window.updatedSelectedFile.name;
+            window.updatedSelectedFileHash = "";
+            updateFileHash.textContent = "";
+            fr.readAsText(window.updatedSelectedFile);
+            fr.onload = function (evt) {
+                if (evt.target.readyState != 2) return;
+                if (evt.target.error) {
+                    alert('Error while reading file');
+                    return;
+                }
+                var hash = web3.utils.soliditySha3(fr.result);
+                window.updatedSelectedFileHash = hash;
+                updateFileHash.textContent = hash;
+            }
+        } else {
+            updateFileLabel.textContent = "No file selected";
+            updateFileHash.textContent = "";
+            window.updatedSelectedFile = null;
         }
     }
 
