@@ -73,6 +73,15 @@
 	\end{itemize}
 \end{frame}
 
+\begin{frame}{Functions of the smart contract}
+	\begin{itemize}
+		\item Uploading new documents costs a small transaction fee
+		\item Ether can be requested from a node-running authority
+		\item Prevents unauthorized uploads (spam)
+		\item Modifying documents is free
+	\end{itemize}
+\end{frame}
+
 \begin{frame}{Consensus algorithm}
 	\begin{itemize}
 		\item Authority Round (Aura)
@@ -82,7 +91,7 @@
 	\end{itemize}
 \end{frame}
 
-\begin{frame}{Aura - parameters}
+\begin{frame}{Aura - definitions}
 	\begin{itemize}
 		\item Let $n$ be the number of nodes
 		\item Let $s$ be the step
@@ -95,7 +104,7 @@
 		\begin{column}{0.48\textwidth}
 			\begin{itemize}
 				\item $s = \frac{UNIXtime}{t}$
-				\item Primary for step $s$: Node with index $s$ mod $n$
+				\item \textit{Primary} for step $s$: Node with index $s$ mod $n$
 				\item Empty steps possible if no transaction in $t$ seconds
 			\end{itemize}
 		\end{column}
